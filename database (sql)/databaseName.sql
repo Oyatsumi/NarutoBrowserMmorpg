@@ -887,7 +887,7 @@ CREATE TABLE IF NOT EXISTS `dk_users` (
   `ultmonstro` varchar(40) NOT NULL DEFAULT 'None,0',
   `chancecaptura` int(6) unsigned NOT NULL DEFAULT '0',
   `pmsnovas` smallint(1) unsigned NOT NULL DEFAULT '0',
-  `mainmsg` varchar(500) NOT NULL,
+  `mainmsg` varchar(2000) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=667 ;
 
