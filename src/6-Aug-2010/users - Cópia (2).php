@@ -1,0 +1,1889 @@
+<?php // users.php :: Handles user account functions.
+
+
+/*$controlquery = doquery("SELECT * FROM {{table}} WHERE id='1' LIMIT 1", "control");
+$controlrow = mysql_fetch_array($controlquery);*/
+
+
+
+include('lib.php');
+$link = opendb();
+
+include('cookies.php');
+$userrow = checkcookies();
+
+
+
+
+
+
+
+if (isset($_GET["do"])) {
+    
+    $do = $_GET["do"];
+    if ($do == "register") { register(); }
+    elseif ($do == "verify") { verify(); }
+    elseif ($do == "lostpassword") { lostpassword(); }
+    elseif ($do == "changepassword") { changepassword(); }
+	elseif ($do == "doardinheiro") { doardinheiro(); }
+	elseif ($do == "banco") { banco(); }
+	elseif ($do == "doaritem") { doaritem(); }
+	elseif ($do == "troca1") { troca1(); }
+	elseif ($do == "troca2") { troca2(); }
+	elseif ($do == "troca3") { troca3(); }
+	elseif ($do == "troca4") { troca4(); }
+	elseif ($do == "batalha1") { batalha1(); }
+	elseif ($do == "resetarduelo") { resetarduelo(); }
+	elseif ($do == "duelo") { duelo(); }
+    
+}
+
+function register() { // Register a new account.
+    
+    $controlquery = doquery("SELECT * FROM {{table}} WHERE id='1' LIMIT 1", "control");
+    $controlrow = mysql_fetch_array($controlquery);
+    
+    if (isset($_POST["submit"])) {
+        
+        extract($_POST);
+        
+        $errors = 0; $errorlist = "";
+        if (strlen($password1) > 10){ $errors++; $errorlist .= "Senha não pode conter mais que 10 caracteres.<br />"; }
+        // Process username.
+        if ($username == "") { $errors++; $errorlist .= "Nome de usuário é necessário.<br />"; }
+        if (preg_match("/[^A-z0-9_\-]/", $username)==1) { $errors++; $errorlist .= "Nome de usuário deve ser alfanumérico(não pode conter espaços).<br />"; } // Thanks to "Carlos Pires" from php.net!
+        $usernamequery = doquery("SELECT username FROM {{table}} WHERE username='$username' LIMIT 1","users");
+        if (mysql_num_rows($usernamequery) > 0) { $errors++; $errorlist .= "Esse nome de usuário já está em uso.<br />"; }
+        
+        // Process charname.
+        if ($charname == "") { $errors++; $errorlist .= "Campo de Nome do Personagem é necessário.<br />"; }
+        if (preg_match("/[^A-z0-9_\-]/", $charname)==1) { $errors++; $errorlist .= "Nome de usuário deve ser alfanumérico(não pode conter espaços).<br />"; } // Thanks to "Carlos Pires" from php.net!
+        $characternamequery = doquery("SELECT charname FROM {{table}} WHERE charname='$charname' LIMIT 1","users");
+        if (mysql_num_rows($characternamequery) > 0) { $errors++; $errorlist .= "Esse nome de usuário já está em uso.<br />"; }
+    
+        // Process email address.
+        if ($email1 == "" || $email2 == "") { $errors++; $errorlist .= "Campo de e-mail é necessário.<br />"; }
+        if ($email1 != $email2) { $errors++; $errorlist .= "Os e-mails não coincidem.<br />"; }
+        if (! is_email($email1)) { $errors++; $errorlist .= "O e-mail não é válido.<br />"; }
+        $emailquery = doquery("SELECT email FROM {{table}} WHERE email='$email1' LIMIT 1","users");
+        if (mysql_num_rows($emailquery) > 0) { $errors++; $errorlist .= "Esse e-mail já está em uso.<br />"; }
+        
+        // Process password.
+        if (trim($password1) == "") { $errors++; $errorlist .= "Campo de senha é necessário.<br />"; }
+        if (preg_match("/[^A-z0-9_\-]/", $password1)==1) { $errors++; $errorlist .= "Sua senha deve ser alfanumérica.<br />"; } // Thanks to "Carlos Pires" from php.net!
+        if ($password1 != $password2) { $errors++; $errorlist .= "Os campos de senha não coincidem.<br />"; }
+        $password = md5($password1);
+        
+        if ($errors == 0) {
+            
+            if ($controlrow["verifyemail"] == 1) {
+                $verifycode = "";
+                for ($i=0; $i<8; $i++) {
+                    $verifycode .= chr(rand(65,90));
+                }
+            } else {
+                $verifycode='1';
+            }
+            
+            $query = doquery("INSERT INTO {{table}} SET id='',regdate=NOW(),verify='$verifycode',username='$username',password='$password',email='$email1',charname='$charname',charclass='$charclass',difficulty='$difficulty'", "users") or die(mysql_error());
+            
+            if ($controlrow["verifyemail"] == 1) {
+                if (sendregmail($email1, $verifycode) == true) {
+                    $page = "Sua conta foi criada com sucesso.<br /><br />Você deve receber um e-mail de confirmação logo. Você precisará verificar o código que está presente no seu e-mail antes de entrar no jogo. Uma vez recebido o e-mail, por favor visite a  <a href=\"users.php?do=verify\">Página de Verificação</a> para ativar sua conta e começar a jogar.";
+                } else {
+                    $page = "Sua conta foi criada com sucesso.<br /><br />De qualquer forma, houve um erro durante o envio do seu e-mail de confirmação. Por favor cheque com o Administrador do jogo para resolver seu problema.";
+                }
+            } else {
+                $page = "Sua conta foi criada com sucesso.<br /><br />Você pode agora acessar a <a href=\"login.php?do=login\">Página de Login</a> e continuar jogando ".$controlrow["gamename"]."!";
+            }
+            
+        } else {
+            
+            $page = "O(s) seguinte(s) erro(s) ocorreram enquanto sua conta estava sendo feita:<br /><span style=\"color:red;\">$errorlist</span><br />Por favor volte e tente novamente.";
+            
+        }
+        
+    } else {
+        
+        $page = gettemplate("register");
+        if ($controlrow["verifyemail"] == 1) { 
+            $controlrow["verifytext"] = "<br /><span class=\"small\">Um código de verificação será enviado para seu e-mail, você não está habilidade de jogar antes de entrar com seu código. Esteja certo de preencher com um e-mail válido.</span>";
+        } else {
+            $controlrow["verifytext"] = "";
+        }
+        $page = parsetemplate($page, $controlrow);
+        
+    }
+    
+    $topnav = "<a href=\"login.php?do=login\"><img src=\"images/button_login.gif\" alt=\"Log In\" border=\"0\" /></a><a href=\"users.php?do=register\"><img src=\"images/button_register.gif\" alt=\"Register\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Help\" border=\"0\" /></a>";
+    display($page, "Registrar", false, false, false);
+    
+}
+
+function verify() {
+    
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+        $userquery = doquery("SELECT username,email,verify FROM {{table}} WHERE username='$username' LIMIT 1","users");
+        if (mysql_num_rows($userquery) != 1) { die("Nenhuma conta com esse nome."); }
+        $userrow = mysql_fetch_array($userquery);
+        if ($userrow["verify"] == 1) { die("Sua conta já está verificada."); }
+        if ($userrow["email"] != $email) { die("E-mail incorreto."); }
+        if ($userrow["verify"] != $verify) { die("Código de verificação incorreto."); }
+        // If we've made it this far, should be safe to update their account.
+        $updatequery = doquery("UPDATE {{table}} SET verify='1' WHERE username='$username' LIMIT 1","users");
+        display("Sua conta foi ativada com sucesso..<br /><br />Você pode acessar a <a href=\"login.php?do=login\">Página de Login</a> e começar a jogar agora mesmo.<br /><br />Obrigado por jogar!","Verificar Email",false,false,false);
+    }
+    $page = gettemplate("verify");
+    $topnav = "<a href=\"login.php?do=login\"><img src=\"images/button_login.gif\" alt=\"Log In\" border=\"0\" /></a><a href=\"users.php?do=register\"><img src=\"images/button_register.gif\" alt=\"Register\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Help\" border=\"0\" /></a>";
+    display($page, "Verify Email", false, false, false);
+    
+}
+
+function lostpassword() {
+    
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+        $userquery = doquery("SELECT email FROM {{table}} WHERE email='$email' LIMIT 1","users");
+        if (mysql_num_rows($userquery) != 1) { die("Nenhuma conta com esse e-mail."); }
+        $newpass = "";
+        for ($i=0; $i<8; $i++) {
+            $newpass .= chr(rand(65,90));
+        }
+        $md5newpass = md5($newpass);
+        $updatequery = doquery("UPDATE {{table}} SET password='$md5newpass' WHERE email='$email' LIMIT 1","users");
+        if (sendpassemail($email,$newpass) == true) {
+            display("Sua nova senha foi enviada para seu e-mail.<br /><br />Quando recebê-la, você pode fazer o <a href=\"login.php?do=login\">Log In</a> e continuar jogando.<br /><br />Obrigado.","Senha Perdida",false,false,false);
+        } else {
+            display("Houve um erro no envio da sua nova senha.<br /><br />Por favor cheque com o Administrador para mais informações.<br /><br />We apologize for the inconvience.","Senha Perdida",false,false,false);
+        }
+        die();
+    }
+    $page = gettemplate("lostpassword");
+    $topnav = "<a href=\"login.php?do=login\"><img src=\"images/button_login.gif\" alt=\"Log In\" border=\"0\" /></a><a href=\"users.php?do=register\"><img src=\"images/button_register.gif\" alt=\"Register\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Help\" border=\"0\" /></a>";
+    display($page, "Senha Perdida", false, false, false);
+    
+}
+
+function changepassword() {
+    
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+        $userquery = doquery("SELECT * FROM {{table}} WHERE username='$username' LIMIT 1","users");
+        if (mysql_num_rows($userquery) != 1) { die("Nenhuma conta com esse nome."); }
+        $userrow = mysql_fetch_array($userquery);
+        if ($userrow["password"] != md5($oldpass)) { die("A senha antiga está incorreta."); }
+        if (preg_match("/[^A-z0-9_\-]/", $newpass1)==1) { die("A nova senha precisa ser alfanumérica."); } // Thanks to "Carlos Pires" from php.net!
+        if ($newpass1 != $newpass2) { die("Novas senhas não coincidem."); }
+        $realnewpass = md5($newpass1);
+        $updatequery = doquery("UPDATE {{table}} SET password='$realnewpass' WHERE username='$username' LIMIT 1","users");
+        if (isset($_COOKIE["dkgame"])) { setcookie("dkgame", "", time()-100000, "/", "", 0); }
+        display("Sua senha foi modificada com sucesso.<br /><br />Você foi desconectado do jogo para eviar erros.<br /><br />Please <a href=\"login.php?do=login\">faça o login novamente</a> para continuar jogando.","Mudar Senha",false,false,false);
+        die();
+    }
+    $page = gettemplate("changepassword");
+    $topnav = "<a href=\"login.php?do=login\"><img src=\"images/button_login.gif\" alt=\"Log In\" border=\"0\" /></a><a href=\"users.php?do=register\"><img src=\"images/button_register.gif\" alt=\"Register\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Help\" border=\"0\" /></a>";
+    display($page, "Mudar Senha", false, false, false); 
+    
+}
+
+function sendpassemail($emailaddress, $password) {
+    
+    $controlquery = doquery("SELECT * FROM {{table}} WHERE id='1' LIMIT 1", "control");
+    $controlrow = mysql_fetch_array($controlquery);
+    extract($controlrow);
+    
+$email = <<<END
+Você ou alguém usando a sua conta de e-mail, utilizou a função de Senha Perdida do jogo $gamename, localizado em $gameurl. 
+
+Nós estamos te enviando uma nova senha, então você poderá entrar novamente no jogo.
+
+Sua nova senha é: $password
+
+Obrigado por jogar.
+Nigeru Animes.
+END;
+
+    $status = mymail($emailaddress, "$gamename Senha Perdida", $email);
+    return $status;
+    
+}
+
+function sendregmail($emailaddress, $vercode) {
+    
+    $controlquery = doquery("SELECT * FROM {{table}} WHERE id='1' LIMIT 1", "control");
+    $controlrow = mysql_fetch_array($controlquery);
+    extract($controlrow);
+    $verurl = $gameurl . "?do=verify";
+    
+$email = <<<END
+Você ou alguém usando sua conta de e-mail, recentemente se registrou no jogo $gamename, localizado em $gameurl.
+
+Esse e-mail é enviado para verificar seu e-mail de registro. Para começar a utilizar a sua conta, você deve verificar o seu e-mail. 
+Por favor visite a Página de Verificação: ($verurl) e preencha com o código de ativação abaixo:
+Código de Ativação: $vercode
+
+Se você não é a pessoa que se registrou no jogo, por favor ignore essa mensagem. Você não receberá outro e-mail.
+END;
+
+    $status = mymail($emailaddress, "$gamename Verificação da Conta", $email);
+    return $status;
+    
+}
+
+function mymail($to, $title, $body, $from = '') { // thanks to arto dot PLEASE dot DO dot NOT dot SPAM at artoaaltonen dot fi.
+
+    $controlquery = doquery("SELECT * FROM {{table}} WHERE id='1' LIMIT 1", "control");
+    $controlrow = mysql_fetch_array($controlquery);
+    extract($controlrow);
+    
+
+  $from = trim($from);
+
+  if (!$from) {
+   $from = '<'.$controlrow["adminemail"].'>';
+  }
+
+  $rp    = $controlrow["adminemail"];
+  $org    = '$gameurl';
+  $mailer = 'PHP';
+
+  $head  = '';
+  $head  .= "Content-Type: text/plain \r\n";
+  $head  .= "Date: ". date('r'). " \r\n";
+  $head  .= "Return-Path: $rp \r\n";
+  $head  .= "From: $from \r\n";
+  $head  .= "Sender: $from \r\n";
+  $head  .= "Reply-To: $from \r\n";
+  $head  .= "Organization: $org \r\n";
+  $head  .= "X-Sender: $from \r\n";
+  $head  .= "X-Priority: 3 \r\n";
+  $head  .= "X-Mailer: $mailer \r\n";
+
+  $body  = str_replace("\r\n", "\n", $body);
+  $body  = str_replace("\n", "\r\n", $body);
+
+  return mail($to, $title, $body, $head);
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function doardinheiro() {
+global $topvar;
+$topvar = true;
+    /* testando se está logado */
+		//include('cookies.php');
+		//$userrow = checkcookies();
+		global $userrow;
+
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);
+		die(); }
+		if ($userrow["currentaction"] != "In Town") {display("Você só pode acessar essa função quando estiver em uma cidade! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+					if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinaheiro = $userrow["gold"];
+			/*fim do teste */
+				
+	/* OLDPASS É A QUANTIDADE DE DINHEIRO DOADO */
+	
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+        $userquery = doquery("SELECT * FROM {{table}} WHERE charname='$username' LIMIT 1","users");
+		
+		
+
+        if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com esse Nome.","Erro",false,false,false);die(); }
+        $userrow = mysql_fetch_array($userquery);
+		if ($usuariologadoid == $userrow["id"]) { display("Você não pode doar Ryou para si mesmo.","Erro",false,false,false);die();}
+		if (!is_numeric($oldpass)) { display("A quantidade de Ryou deve ser um número.","Erro",false,false,false);die(); }
+		/*if ($userrow["password"] != md5($oldpass)) { die("The old password you provided was incorrect."); }
+        /*$realnewpass = md5($newpass1); */
+		if ($oldpass > $usuriologadodinaheiro) { display("Você não pode doar mais do que a sua quantidade de Ryou.","Erro",false,false,false);die(); }
+		if ($oldpass < 1) { display("Você não pode doar menos que 1 Ryou.","Erro",false,false,false);die(); }
+		$dinheirototal = $userrow["gold"] + $oldpass;
+		$dinheirousuariologadodepois = $usuriologadodinaheiro - $oldpass;
+				
+		$updatequery = doquery("UPDATE {{table}} SET gold='$dinheirototal' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET gold='$dinheirousuariologadodepois' WHERE charname='$usuariologadonome' LIMIT 1","users");
+        
+				
+        display("O dinheiro foi retirado da sua conta e doado com sucesso.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando ou <a href=\"users.php?do=doardinheiro\">doar mais Ryou</a>.","Doar Ryou",false,false,false);
+        die();
+    }
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/doaryou.gif\" /></td></tr></table>
+	
+	<b>Seu Ryou</b>: $usuriologadodinaheiro<br><br>".gettemplate("doardinheiro");
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Doar Ryou", false, false, false); 
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+function banco() {
+global $topvar;
+$topvar = true;
+display("Banco em manutenção, aguarde.","Erro",false,false,false);die();
+    /* testando se está logado */
+	
+	
+		//include('cookies.php');
+		// $userrow = checkcookies();
+		 global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {display("Você só pode acessar essa função quando estiver em uma cidade! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+			if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+			
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+		
+		$armaid = $userrow["weaponid"];
+		$armaduraid = $userrow["armorid"];
+		$escudoid = $userrow["shieldid"];
+		$arma = $userrow["weaponname"];
+		$armadura = $userrow["armorname"];
+		$escudo = $userrow["shieldname"];
+		
+		$idslot1 = $userrow["slot1id"];
+		$idslot2 = $userrow["slot2id"];
+		$idslot3 = $userrow["slot3id"];
+		$nomeslot1 = $userrow["slot1name"];
+		$nomeslot2 = $userrow["slot2name"];
+		$nomeslot3 = $userrow["slot3name"];
+		
+		/* BANCO DE TROCAS */
+		$banco1 = $userrow["banconome1"];
+		$banco2 = $userrow["banconome2"];
+		$banco3 = $userrow["banconome3"];
+		$banco4 = $userrow["banconome4"];
+		$banco5 = $userrow["banconome5"];
+		$banco6 = $userrow["banconome6"];
+		
+		$banco1id = $userrow["bancoid1"];
+		$banco2id = $userrow["bancoid2"];
+		$banco3id = $userrow["bancoid3"];
+		$banco4id = $userrow["bancoid4"];
+		$banco5id = $userrow["bancoid5"];
+		$banco6id = $userrow["bancoid6"];
+		
+		/* ARMAZENAMENTO */
+		
+		$b2banco1id = $userrow["b2_bancoid1"];
+		$b2banco2id = $userrow["b2_bancoid2"];
+		$b2banco3id = $userrow["b2_bancoid3"];
+		$b2banco4id = $userrow["b2_bancoid4"];
+		$b2banco5id = $userrow["b2_bancoid5"];
+		$b2banco6id = $userrow["b2_bancoid6"];
+		
+		$b2banco1 = $userrow["b2_banconome1"];
+		$b2banco2 = $userrow["b2_banconome2"];
+		$b2banco3 = $userrow["b2_banconome3"];
+		$b2banco4 = $userrow["b2_banconome4"];
+		$b2banco5 = $userrow["b2_banconome5"];
+		$b2banco6 = $userrow["b2_banconome6"];
+		
+		$ryoudepositado = $userrow["banco_grana"];
+		
+		
+		
+		
+			/*fim do teste */
+				
+	/* OLDPASS É A QUANTIDADE DE DINHEIRO DOADO */
+	
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+		
+        
+		
+		if ($usuriologadodinheiro < 20) { display("Você precisa ter mais que 20 Ryou para utilizar o banco.","Erro",false,false,false);die();}
+		
+		//DEPOSITAR GRANA
+		if ($deposito != "") { 
+		if (!is_numeric($deposito)) { display("A quantidade de Ryou à repositar deve ser um número.","Erro",false,false,false);die(); }
+		if ($deposito < 1) { display("Você não pode depositar menos que 1 Ryou.","Erro",false,false,false);die(); }
+		if ($deposito > 9999) { display("Você não pode depositar mais que 9999 Ryou.","Erro",false,false,false);die(); }
+				if ($deposito > $usuriologadodinheiro) { display("Você não pode depositar mais que a sua quantidade de Ryou.","Erro",false,false,false);die(); }
+		
+			
+		$ryoudepositado += $deposito;
+		$usuriologadodinheiro -= $deposito;
+		
+		$updatequery = doquery("UPDATE {{table}} SET banco_grana='$ryoudepositado' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET gold='$usuriologadodinheiro' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		
+		
+		//RETIRAR GRANA
+		if ($retirar != "") {
+		if (!is_numeric($retirar)) { display("A quantidade de Ryou à retirar deve ser um número.","Erro",false,false,false);die(); }
+		if ($retirar < 1) { display("Você não pode retirar menos que 1 Ryou.","Erro",false,false,false);die(); }
+		if ($retirar > 9999) { display("Você não pode retirar mais que 9999 Ryou.","Erro",false,false,false);die(); }
+		if ($retirar > $ryoudepositado) { display("Você não pode retirar mais que seu dinheiro no banco.","Erro",false,false,false);die(); }
+				
+		$ryoudepositado -= $retirar;
+		$usuriologadodinheiro += $retirar;
+		
+		$updatequery = doquery("UPDATE {{table}} SET banco_grana='$ryoudepositado' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET gold='$usuriologadodinheiro' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		
+		/* BANCO DE TROCAS */
+		
+		
+		
+		if ($Combobox1 == 1) { 
+		//checar itens
+		if ($bancoid != 0) {
+		$itemsquery2 = doquery("SELECT * FROM {{table}} WHERE id='$banco1id' LIMIT 1", "items");
+         $itemsrow2 = mysql_fetch_array($itemsquery2);} else {$itemsrow2["attribute"] = 0;}
+		 if ($armaid != 0) {
+		$itemsquery = doquery("SELECT * FROM {{table}} WHERE id='$armaid' LIMIT 1","items");
+		$itemsrow = mysql_fetch_array($itemsquery);} else {$itemsrow["attribute"] = 0;}
+		
+		$newattack = $userrow["attackpower"] + $itemsrow["attribute"] - $itemsrow2["attribute"];
+		if ($userrow["currenthp"] > $userrow["maxhp"]) { $newhp = $userrow["maxhp"]; } else { $newhp = $userrow["currenthp"]; }
+        if ($userrow["currentmp"] > $userrow["maxmp"]) { $newmp = $userrow["maxmp"]; } else { $newmp = $userrow["currentmp"]; }
+        if ($userrow["currenttp"] > $userrow["maxtp"]) { $newtp = $userrow["maxtp"]; } else { $newtp = $userrow["currenttp"]; }
+		//fim
+		
+		$updatequery = doquery("UPDATE {{table}} SET weaponid='$banco1id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET weaponname='$banco1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid1='$armaid' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome1='$arma' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		//upload stats
+		$updatequery = doquery("UPDATE {{table}} SET strenght='$arma' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+		}
+		
+		if ($Combobox2 == 1) { 
+		$updatequery = doquery("UPDATE {{table}} SET armorid='$banco2id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET armorname='$banco2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid2='$amarduraid' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome2='$armadura' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox3 == 1) { 
+		$updatequery = doquery("UPDATE {{table}} SET shieldid='$banco3id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET shieldname='$banco3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid3='$escudoid' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome3='$escudo' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox4 == 1) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot1id='$banco4id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1name='$banco4' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid4='$idslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome4='$nomeslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox4 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot1id='$idslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1name='$nomeslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot2id='$idslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot2name='$nomeslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		if ($Combobox4 == 4) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot1id='$idslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1name='$nomeslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3id='$idslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3name='$nomeslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox5 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot2id='$idslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot2name='$nomeslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1id='$idslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1name='$nomeslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		if ($Combobox5 == 4) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot2id='$idslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot2name='$nomeslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3id='$idslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3name='$nomeslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox6 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot3id='$idslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3name='$nomeslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1id='$idslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1name='$nomeslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		if ($Combobox6 == 4) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot2id='$idslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot2name='$nomeslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3id='$idslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3name='$nomeslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox5 == 1) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot2id='$banco5id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot2name='$banco5' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid5='$idslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome5='$nomeslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox6 == 1) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot3id='$banco6id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3name='$banco6' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid6='$idslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome6='$nomeslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		/*DELETAR ARMA DO BANCO */
+		
+		if ($Combobox1 == 2) { 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid1='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome1='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox2 == 2) { 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid2='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome2='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		if ($Combobox3 == 2) { 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid3='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome3='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox4 == 2) { 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid4='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome4='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox5 == 2) { 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid5='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome5='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox6 == 2) { 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid6='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome6='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		
+		
+		
+		/* BANCO DE ARMAZENAMENTO */
+		
+		
+		if ($Combobox1 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET weaponid='$b2banco1id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET weaponname='$b2banco1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_bancoid1='$armaid' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_banconome1='$arma' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox2 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET armorid='$b2banco2id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET armorname='$b2banco2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_bancoid2='$amarduraid' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_banconome2='$armadura' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox3 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET shieldid='$b2banco3id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET shieldname='$b2banco3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_bancoid3='$escudoid' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_banconome3='$escudo' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox4 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot1id='$b2banco4id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot1name='$b2banco4' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_bancoid4='$idslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_banconome4='$nomeslot1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox5 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot2id='$b2banco5id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot2name='$b2banco5' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_bancoid5='$idslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_banconome5='$nomeslot2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		if ($Combobox6 == 3) { 
+		$updatequery = doquery("UPDATE {{table}} SET slot3id='$b2banco6id' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET slot3name='$b2banco6' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_bancoid6='$idslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET b2_banconome6='$nomeslot3' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		
+		
+		
+		
+		$usuriologadodinheiro = $usuriologadodinheiro - 20;
+		
+				
+		$updatequery = doquery("UPDATE {{table}} SET gold='$usuriologadodinheiro' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+        
+         display("O processo bancário foi completado com sucesso e te custou 20 Ryou.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando ou <a href=\"users.php?do=banco\">voltar ao banco</a>.","Banco",false,false,false);
+        die();
+    }
+
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/banco.gif\" /></td></tr></table>
+	
+	<b>Seu Ryou</b>: $usuriologadodinheiro / <b>Ryou no Banco</b>: $ryoudepositado<br><br><table border=0 cellspacing=0 cellpadding=0><tr><td>
+	
+	<b><font color=orange>Equipado:</font></b><br>
+		<b>Arma</b>: $arma<br><b>Colete</b>: $armadura<br><b>Bandana</b>: $escudo<br><b>Slot 1</b>: $nomeslot1<br><b>Slot 2</b>: $nomeslot2<br><b>Slot 3</b>: $nomeslot3<br><br>
+	</td><td width=20></td><td>
+	
+	<b><font color=orange>Banco de Trocas:</font></b><br>
+	<b>Arma</b>: $banco1<br><b>Colete</b>: $banco2<br><b>Bandana</b>: $banco3<br><b>Slot 1</b>: $banco4<br><b>Slot 2</b>: $banco5<br><b>Slot 3</b>: $banco6<br><br><td width=20></td>
+	
+	<td>
+	<b><font color=orange>Banco de Armazenamento:</font></b><br>
+		<b>Arma</b>: $b2banco1<br><b>Colete</b>: $b2banco2<br><b>Bandana</b>: $b2banco3<br><b>Slot 1</b>: $b2banco4<br><b>Slot 2</b>: $b2banco5<br><b>Slot 3</b>: $b2banco6<br><br></td>
+	</td>
+	
+	
+	
+	</tr></table>"
+		.gettemplate("banco");
+    $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+	
+    display($page, "Banco", false, false, false); 
+	
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function doaritem() {
+global $topvar;
+$topvar = true;
+display("Doar item em manutenção, aguarde.","Erro",false,false,false);die();
+    /* testando se está logado */
+		//include('cookies.php');
+		//$userrow = checkcookies();
+		global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+			if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+		
+		$banco1 = $userrow["banconome1"];
+		$banco2 = $userrow["banconome2"];
+		$banco3 = $userrow["banconome3"];
+		$banco4 = $userrow["banconome4"];
+		$banco5 = $userrow["banconome5"];
+		$banco6 = $userrow["banconome6"];
+		
+		$banco1id = $userrow["bancoid1"];
+		$banco2id = $userrow["bancoid2"];
+		$banco3id = $userrow["bancoid3"];
+		$banco4id = $userrow["bancoid4"];
+		$banco5id = $userrow["bancoid5"];
+		$banco6id = $userrow["bancoid6"];
+			/*fim do teste */
+				
+	/* OLDPASS É A QUANTIDADE DE DINHEIRO DOADO */
+	
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+        $userquery = doquery("SELECT * FROM {{table}} WHERE charname='$username' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com esse Nome.","Erro",false,false,false);die(); }
+        $userrow = mysql_fetch_array($userquery);
+		if ($usuariologadoid == $userrow["id"]) { display("Você não pode doar Item para si mesmo.","Erro",false,false,false);die();}
+				/*if ($userrow["password"] != md5($oldpass)) { die("The old password you provided was incorrect."); }
+        /*$realnewpass = md5($newpass1); */
+		if ($usuriologadodinheiro < 40) { display("Você não pode doar um Item com menos de 40 Ryou.","Erro",false,false,false);die();}
+		
+		if ($Combobox1 == 1) {
+		if ($userrow["bancoid1"] != 0) { display("O jogador o qual você quer doar o Item, já possui uma Arma no Banco de Trocas.","Erro",false,false,false);die();}
+		
+		else{ 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid1='$banco1id' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome1='$banco1' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid1='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome1='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		}
+		
+		
+		if ($Combobox1 == 2) {
+		if ($userrow["bancoid2"] != 0) { display("O jogador o qual você quer doar o Item, já possui um Colete no Banco de Trocas.","Erro",false,false,false);die();}
+		
+		else{ 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid2='$banco2id' WHERE charname'$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome2='$banco2' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid2='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome2='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		}
+		
+		
+		if ($Combobox1 == 3) {
+		if ($userrow["bancoid3"] != 0) { display("O jogador o qual você quer doar o Item, já possui uma Bandana no Banco de Trocas.","Erro",false,false,false);die();}
+		else{ 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid3='$banco3id' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome3='$banco3' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid3='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome3='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		}
+		
+		if ($Combobox1 == 4) {
+		if ($userrow["bancoid4"] != 0) { display("O jogador o qual você quer doar o Item, já possui um Item no Slot 1 no Banco de Trocas.","Erro",false,false,false);die();}
+		else{ 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid4='$banco4id' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome4='$banco4' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid4='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome4='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		}
+		
+		if ($Combobox1 == 5) {
+		if ($userrow["bancoid5"] != 0) { display("O jogador o qual você quer doar o Item, já possui um Item no Slot 2 no Banco de Trocas.","Erro",false,false,false);die();}
+		
+		else{ 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid5='$banco5id' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome5='$banco5' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid5='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome5='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		}
+		
+		if ($Combobox1 == 6) {
+		if ($userrow["bancoid6"] != 0) { display("O jogador o qual você quer doar o Item, já possui um Item no Slot 3 no Banco de Trocas.","Erro",false,false,false);die();}
+		
+		else{ 
+		$updatequery = doquery("UPDATE {{table}} SET bancoid6='$banco6id' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome6='$banco6' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid6='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET banconome6='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		}
+		}
+		
+		if ($Combobox1 == 0) {display("Primeiro selecione uma ação.","Erro",false,false,false);die();}
+		$usuriologadodinheiro = $usuriologadodinheiro - 40;
+				
+		
+		$updatequery = doquery("UPDATE {{table}} SET gold='$usuriologadodinheiro' WHERE charname='$usuariologadonome' LIMIT 1","users");
+        
+				
+        display("O Item foi retirado da sua conta e doado com sucesso. Foram retirados da sua conta, 40 Ryou.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando ou <a href=\"users.php?do=doaritem\">doar mais Item</a>.","Doar Item",false,false,false);
+        die();
+    }
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/doaritem.gif\" /></td></tr></table>
+	
+	
+	<b>Seu Ryou</b>: $usuriologadodinheiro<br><br><b><font color=orange>Seu Banco de Trocas:</font></b><br><b>Arma</b>: $banco1<br><b>Colete</b>: $banco2<br><b>Bandana</b>: $banco3<br><b>Slot 1</b>: $banco4<br><b>Slot2</b>: $banco5<br><b>Slot3</b>: $banco6<br><br>".gettemplate("doaritem");
+    $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Doar Item", false, false, false); 
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function troca1() {
+global $topvar;
+$topvar = true;
+display("Troca em manutenção, aguarde.","Erro",false,false,false);die();
+    /* testando se está logado */
+		//include('cookies.php');
+		 //$userrow = checkcookies();
+		 global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+					if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinaheiro = $userrow["gold"];
+			/*fim do teste */
+			
+			/* BANCO DE TROCAS */
+		$banco1 = $userrow["banconome1"];
+		$banco2 = $userrow["banconome2"];
+		$banco3 = $userrow["banconome3"];
+		$banco4 = $userrow["banconome4"];
+		$banco5 = $userrow["banconome5"];
+		$banco6 = $userrow["banconome6"];
+		
+		$banco1id = $userrow["bancoid1"];
+		$banco2id = $userrow["bancoid2"];
+		$banco3id = $userrow["bancoid3"];
+		$banco4id = $userrow["bancoid4"];
+		$banco5id = $userrow["bancoid5"];
+		$banco6id = $userrow["bancoid6"]; 
+			
+						
+	/* OLDPASS É A QUANTIDADE DE DINHEIRO DOADO */
+	
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+		 $userquery = doquery("SELECT * FROM {{table}} WHERE charname='$username' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com esse Nome.","Erro",false,false,false);die(); }
+        $userrow = mysql_fetch_array($userquery);
+		
+		
+		//testando se os dois jogadores estão no mesmo mapa
+	$monsterquery = doquery("SELECT * FROM {{table}} WHERE charname='$username' LIMIT 1", "users");
+    $jogador2row = mysql_fetch_array($monsterquery);
+    if ($userrow["longitude"] != $jogador2row["longitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		if ($userrow["latitude"] != $jogador2row["latitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		//acaba aqui
+		
+		
+		if ($Combobox1 == 0) { display("Primeiro selecione um Item.","Erro",false,false,false);die(); }
+		        
+		$updatequery = doquery("UPDATE {{table}} SET trocanomeitem='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaiditem='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanomejogador='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanumero='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaposicaoitem='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+
+//colocando a posição do item, qual item é.
+		$updatequery = doquery("UPDATE {{table}} SET trocaposicaoitem='$Combobox1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+		if ($Combobox1 == 1) {$nomeitempronto = $banco1; $iditempronto = $banco1id;}
+		if ($Combobox1 == 2) {$nomeitempronto = $banco2;$iditempronto = $banco2id;}
+		if ($Combobox1 == 3) {$nomeitempronto = $banco3;$iditempronto = $banco3id;}
+		if ($Combobox1 == 4) {$nomeitempronto = $banco4;$iditempronto = $banco4id;}
+		if ($Combobox1 == 5) {$nomeitempronto = $banco5;$iditempronto = $banco5id;}
+		if ($Combobox1 == 6) {$nomeitempronto = $banco6;$iditempronto = $banco6id;}
+		//confere se o item se a casa do jogador a ser doado está vazia
+		$nomedoslot = bancoid.$Combobox1;
+		if ($userrow["$nomedoslot"] != 0) { display("O Jogador o qual você realizar a troca, já possui um Item no Banco de Trocas referente ao item que você quer trocar.","Erro",false,false,false);die(); }
+				
+		
+		$updatequery = doquery("UPDATE {{table}} SET trocanomeitem='$nomeitempronto' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaiditem='$iditempronto' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanomejogador='$username' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanumero='1' WHERE charname='$username' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanomejogador='$usuariologadonome' WHERE charname='$username' LIMIT 1","users");
+		
+		
+      	
+		
+        
+				
+        display("A primeira etapa da troca foi realizada. Envie esse link: <font color=red>http://nigeru.com/narutorpg/users.php?do=troca2</font> para o Jogador o qual você deseja realizar a Troca.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando, caso não queira mais realizar uma troca, ou ainda <a href=\"users.php?do=troca1\">iniciar uma nova Troca</a>.","Realizar Troca",false,false,false);
+        die();
+    }
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/troca.gif\" /></td></tr></table>
+	
+	<b>Seu Ryou</b>: $usuriologadodinaheiro<br><br>
+	
+	<b><font color=orange>Seu Banco de Trocas:</font></b><br>
+	<b>Arma</b>: $banco1<br><b>Colete</b>: $banco2<br><b>Bandana</b>: $banco3<br><b>Slot 1</b>: $banco4<br><b>Slot 2</b>: $banco5<br><b>Slot 3</b>: $banco6<br><br>
+	
+	".gettemplate("troca1");
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Realizar Troca", false, false, false); 
+    
+}
+
+
+
+
+function troca2() {
+global $topvar;
+$topvar = true;
+    /* testando se está logado */
+		//include('cookies.php');
+		 //$userrow = checkcookies();
+		 global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+			/*fim do teste */
+			
+			/* BANCO DE TROCAS */
+		$banco1 = $userrow["banconome1"];
+		$banco2 = $userrow["banconome2"];
+		$banco3 = $userrow["banconome3"];
+		$banco4 = $userrow["banconome4"];
+		$banco5 = $userrow["banconome5"];
+		$banco6 = $userrow["banconome6"];
+		
+		$banco1id = $userrow["bancoid1"];
+		$banco2id = $userrow["bancoid2"];
+		$banco3id = $userrow["bancoid3"];
+		$banco4id = $userrow["bancoid4"];
+		$banco5id = $userrow["bancoid5"];
+		$banco6id = $userrow["bancoid6"]; 
+		
+		$numerodatroca = $userrow["trocanumero"]; 
+		$username = $userrow["trocanomejogador"];
+		
+		 if ($numerodatroca != 1) { display("Respeite a ordem da troca, envie esse link para o outro jogador.","Erro",false,false,false);die(); }
+						
+	/* OLDPASS É A QUANTIDADE DE DINHEIRO DOADO */
+	
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+		
+		$userquery = doquery("SELECT * FROM {{table}} WHERE charname='$username' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com esse Nome.","Erro",false,false,false);die(); }
+		$userrow = mysql_fetch_array($userquery);
+			
+       		if (!is_numeric($oldpass)) { display("A quantidade de Ryou deve ser um número.","Erro",false,false,false);die(); }
+		
+		
+	//testando se os dois jogadores estão no mesmo mapa
+	$monsterquery = doquery("SELECT * FROM {{table}} WHERE charname='$username' LIMIT 1", "users");
+    $jogador2row = mysql_fetch_array($monsterquery);
+   if ($userrow["longitude"] != $jogador2row["longitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		if ($userrow["latitude"] != $jogador2row["latitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		//acaba aqui
+		
+		
+		if ($oldpass > $usuriologadodinheiro) {display("Você não pode trocar mais Ryou que a sua quantidade.","Erro",false,false,false); die(); }
+		if ($oldpass < 1) {display("Você não pode trocar menos que 1 Ryou.","Erro",false,false,false); die(); }
+		if ($oldpass > 999999999) {display("Você não pode utilizar um número com 10 algarismos.","Erro",false,false,false); die(); }
+		
+		$nomedoitemprontop = $oldpass." Ryou";
+		$updatequery = doquery("UPDATE {{table}} SET trocanomeitem='$nomedoitemprontop' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaiditem='$oldpass' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanomejogador='$username' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				
+		//número da troca
+		$updatequery = doquery("UPDATE {{table}} SET trocanumero='2' WHERE charname='$username' LIMIT 1","users");
+		
+      	
+		
+        
+				
+        display("A segunda etapa da troca foi realizada. Envie esse link: <font color=red>http://nigeru.com/narutorpg/users.php?do=troca3</font> para o Jogador o qual você deseja realizar a Troca.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando, caso não queira mais realizar uma troca, ou ainda <a href=\"users.php?do=troca1\">iniciar uma nova Troca</a>.","Realizar Troca",false,false,false);
+        die();
+    }
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/troca.gif\" /></td></tr></table>
+	
+	<b>Seu Ryou</b>: $usuriologadodinheiro<br><br><b>Trocar com</b>: $username<br><br>".gettemplate("troca2");
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Realizar Troca", false, false, false); 
+    
+}
+
+function troca3() {
+global $topvar;
+$topvar = true;
+    /* testando se está logado */
+		//include('cookies.php');
+		 //$userrow = checkcookies();
+		 global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+			/*fim do teste */
+			
+			/* BANCO DE TROCAS */
+		$banco1 = $userrow["banconome1"];
+		$banco2 = $userrow["banconome2"];
+		$banco3 = $userrow["banconome3"];
+		$banco4 = $userrow["banconome4"];
+		$banco5 = $userrow["banconome5"];
+		$banco6 = $userrow["banconome6"];
+		
+		$banco1id = $userrow["bancoid1"];
+		$banco2id = $userrow["bancoid2"];
+		$banco3id = $userrow["bancoid3"];
+		$banco4id = $userrow["bancoid4"];
+		$banco5id = $userrow["bancoid5"];
+		$banco6id = $userrow["bancoid6"]; 
+		
+		$trocanomeitemjogador = $userrow["trocanomeitem"];
+		$nomedojogadordatroca = $userrow["trocanomejogador"];
+				
+		$numerodatrocadurante = $userrow["trocanumero"];
+		
+		
+			 $userquery = doquery("SELECT * FROM {{table}} WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com o nome do Jogador.","Erro",false,false,false);die(); }
+		$userrow = mysql_fetch_array($userquery);
+		$itemdetrocajogador2 = $userrow["trocanomeitem"];
+		$nomedojogadordatroca2 = $userrow["trocanomejogador"];
+		if ($nomedojogadordatroca2 != $usuariologadonome) {$fim = true;}
+		if ($fim){ display("Você não pode comandar uma Troca que não é pra você. <a href=\"users.php?do=troca1\">Clique aqui</a> para realizar uma nova troca.","Erro",false,false,false);die(); }
+		if ($numerodatrocadurante != 2) { display("Respeite a ordem da troca, envie esse link para o outro jogador.","Erro",false,false,false);die(); }
+		
+		//testando se os dois jogadores estão no mesmo mapa
+	$monsterquery = doquery("SELECT * FROM {{table}} WHERE charname='$nomedojogadordatroca2' LIMIT 1", "users");
+    $jogador2row = mysql_fetch_array($monsterquery);
+    if ($userrow["longitude"] != $jogador2row["longitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		if ($userrow["latitude"] != $jogador2row["latitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		//acaba aqui
+						
+	/* OLDPASS É A QUANTIDADE DE DINHEIRO DOADO */
+	
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+		
+      
+		
+		
+		
+		if ($numerodatrocadurante != 2){  display("Não foi possível realizar uma troca, recomece uma nova troca <a href=\"users.php?do=troca1\">clicando aqui</a>.","Erro",false,false,false);die(); }
+		
+		
+		
+		
+		
+		//número da troca
+			$updatequery = doquery("UPDATE {{table}} SET trocanumero='3' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		
+      	
+		
+        
+				
+        display("A terceira etapa da troca foi realizada. Envie esse link: <font color=red>http://nigeru.com/narutorpg/users.php?do=troca4</font> para o Jogador o qual você deseja realizar a Troca.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando, caso não queira mais realizar uma troca, ou ainda <a href=\"users.php?do=troca1\">iniciar uma nova Troca</a>.","Realizar Troca",false,false,false);
+        die();
+    }
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/troca.gif\" /></td></tr></table>
+	
+	<b>Troca atual:</b><br>$trocanomeitemjogador por $itemdetrocajogador2.".gettemplate("troca3");
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Realizar Troca", false, false, false); 
+    
+}
+
+
+
+
+
+
+function troca4() {
+global $topvar;
+$topvar = true;
+    /* testando se está logado */
+		//include('cookies.php');
+		// $userrow = checkcookies();
+		global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+					if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+			/*fim do teste */
+			
+			/* BANCO DE TROCAS */
+		$banco1 = $userrow["banconome1"];
+		$banco2 = $userrow["banconome2"];
+		$banco3 = $userrow["banconome3"];
+		$banco4 = $userrow["banconome4"];
+		$banco5 = $userrow["banconome5"];
+		$banco6 = $userrow["banconome6"];
+		
+		$banco1id = $userrow["bancoid1"];
+		$banco2id = $userrow["bancoid2"];
+		$banco3id = $userrow["bancoid3"];
+		$banco4id = $userrow["bancoid4"];
+		$banco5id = $userrow["bancoid5"];
+		$banco6id = $userrow["bancoid6"]; 
+		
+		$trocanomeitemjogador = $userrow["trocanomeitem"];
+		$nomedojogadordatroca = $userrow["trocanomejogador"];
+		$iddojogadordatroca = $userrow["trocaiditem"];
+		$posicaoitem = $userrow["trocaposicaoitem"];
+				
+		$numerodatrocadurante = $userrow["trocanumero"];
+			
+			
+			
+			
+			
+			$userquery = doquery("SELECT * FROM {{table}} WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com o nome do Jogador.","Erro",false,false,false);die(); }
+		$userrow = mysql_fetch_array($userquery);
+		$itemdetrocajogador2 = $userrow["trocanomeitem"];
+		$nomedojogadordatroca2 = $userrow["trocanomejogador"];
+		$iddojogadordatroca2 = $userrow["trocaiditem"];
+		$posicaoitem2 = $userrow["trocaposicaoitem"];
+		$dinheirodojogador2 = $userrow["gold"];
+		if ($nomedojogadordatroca2 != $usuariologadonome) {$fim = true;}
+		if ($fim){  display("Você não pode comandar uma Troca que não é pra você. <a href=\"users.php?do=troca1\">Clique aqui</a> para realizar uma nova troca.","Erro",false,false,false);die(); }
+		if ($numerodatrocadurante != 3) { display("Respeite a ordem da troca, envie esse link para o outro jogador.","Erro",false,false,false);die(); }
+						
+	/* OLDPASS É A QUANTIDADE DE DINHEIRO DOADO */
+	
+	//testando se os dois jogadores estão no mesmo mapa
+	$monsterquery = doquery("SELECT * FROM {{table}} WHERE charname='$nomedojogadordatroca2' LIMIT 1", "users");
+    $jogador2row = mysql_fetch_array($monsterquery);
+    if ($userrow["longitude"] != $jogador2row["longitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		if ($userrow["latitude"] != $jogador2row["latitude"]) {display("Você só pode trocar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		//acaba aqui
+	
+	
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+		
+        
+		
+		
+		//if ($numerodatrocadurante != 3){ die("Não foi possível realizar uma troca, recomece uma nova troca <a href=\"users.php?do=troca1\">clicando aqui</a>."); }
+		
+		
+		
+		//trocando
+		if ($posicaoitem2 == 1) {
+		$updatequery = doquery("UPDATE {{table}} SET banconome1='$itemdetrocajogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid1='$iddojogadordatroca2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+		$updatequery = doquery("UPDATE {{table}} SET banconome1='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid1='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");}
+		
+		if ($posicaoitem2 == 2) {
+		$updatequery = doquery("UPDATE {{table}} SET banconome2='$itemdetrocajogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid2='$iddojogadordatroca2' WHERE charname='$usuariologadonome' LIMIT 1","users");	
+		
+		$updatequery = doquery("UPDATE {{table}} SET banconome2='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid2='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");}
+		
+		if ($posicaoitem2 == 3) {
+		$updatequery = doquery("UPDATE {{table}} SET banconome3='$itemdetrocajogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid3='$iddojogadordatroca2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+			$updatequery = doquery("UPDATE {{table}} SET banconome3='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid3='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");}
+		
+		if ($posicaoitem2 == 4) {
+		$updatequery = doquery("UPDATE {{table}} SET banconome4='$itemdetrocajogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid4='$iddojogadordatroca2' WHERE charname='$usuariologadonome' LIMIT 1","users");	
+		
+		$updatequery = doquery("UPDATE {{table}} SET banconome4='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid4='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");}
+		
+		if ($posicaoitem2 == 5) {
+		$updatequery = doquery("UPDATE {{table}} SET banconome5='$itemdetrocajogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid5='$iddojogadordatroca2' WHERE charname='$usuariologadonome' LIMIT 1","users");	
+		
+		$updatequery = doquery("UPDATE {{table}} SET banconome5='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid5='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");}
+		
+		if ($posicaoitem2 == 6) {
+		$updatequery = doquery("UPDATE {{table}} SET banconome6='$itemdetrocajogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid6='$iddojogadordatroca2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+			$updatequery = doquery("UPDATE {{table}} SET banconome6='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET bancoid6='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");}
+		
+		//trocandojogador2
+		$dinheirofinalpronto = $dinheirodojogador2 + $iddojogadordatroca;
+		$dinheirofinalpronto2 = $usuriologadodinheiro - $iddojogadordatroca;
+		$updatequery = doquery("UPDATE {{table}} SET gold='$dinheirofinalpronto' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		
+		$updatequery = doquery("UPDATE {{table}} SET gold='$dinheirofinalpronto2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+
+		
+		
+      	//resetando os itens da troca
+		$updatequery = doquery("UPDATE {{table}} SET trocanomeitem='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaiditem='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanomejogador='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanumero='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaposicaoitem='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+		$updatequery = doquery("UPDATE {{table}} SET trocanomeitem='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaiditem='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanomejogador='None' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocanumero='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET trocaposicaoitem='0' WHERE charname='$nomedojogadordatroca' LIMIT 1","users");
+		
+		
+        
+				
+        display("A troca foi realizada com sucesso e seu Item foi enviado para o Banco de Trocas.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando, caso não queira mais realizar uma troca, ou ainda <a href=\"users.php?do=troca1\">iniciar uma nova Troca</a>.","Realizar Troca",false,false,false);
+        die();
+		
+		
+    }
+	
+	
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/troca.gif\" /></td></tr></table>
+	
+	<b>Troca atual:</b><br>$trocanomeitemjogador por $itemdetrocajogador2.".gettemplate("troca4");
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Realizar Troca", false, false, false); 
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function batalha1() {
+global $topvar;
+$topvar = true;
+    /* testando se está logado */
+		//include('cookies.php');
+		 //$userrow = checkcookies();
+		 global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+			/*fim do teste */
+			
+			 
+			 //dados de batalha
+		$batalhanome = $userrow["batalha_nome"];
+		$batalhaid = $userrow["batalha_id"];
+		$batalhahp = $userrow["batalha_hp"];
+		
+		//fim
+		$hpjogador = $userrow["currenthp"];
+		$mpjogador = $userrow["currentmp"];
+	
+		
+		
+		
+
+    if (isset($_POST["submit"])) {
+        extract($_POST);
+		
+		//DADOS JOGADOR 2
+		$userquery = doquery("SELECT * FROM {{table}} WHERE charname='$jogador' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com esse nome.","Erro",false,false,false);die(); }
+		
+		$userrow = mysql_fetch_array($userquery);
+		if ($usuariologadonome == $jogador) {  display("Você não pode batalhar com você mesmo.","Erro",false,false,false);die();}
+		$nomedojogador2 = $userrow["charname"];
+		$batalhanome2 = $userrow["batalha_nome"];
+		$batalhaid2 = $userrow["batalha_id"];
+		$batalhahp2 = $userrow["batalha_hp"];
+		$hpjogador2 = $userrow["currenthp"];
+		$mpjogador2 = $usarrow["currentmp"];
+				
+		
+	//testando se os dois jogadores estão no mesmo mapa
+	$monsterquery = doquery("SELECT * FROM {{table}} WHERE charname='$jogador' LIMIT 1", "users");
+    $jogador2row = mysql_fetch_array($monsterquery);
+    if ($userrow["longitude"] != $jogador2row["longitude"]) {display("Você só pode duelar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		if ($userrow["latitude"] != $jogador2row["latitude"]) {display("Você só pode duelar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		//acaba aqui
+     		
+		
+	
+     $updatequery = doquery("UPDATE {{table}} SET currentmonstersleep='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdamage='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdefense='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_nome='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_hp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterimmune='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonster='' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer2='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_id='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_acao='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+		
+		
+		$updatequery = doquery("UPDATE {{table}} SET batalha_nome='$jogador' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_hp='$hpjogador' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='$hpjogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterimmune='$mpjogador2' WHERE charname='$usuariologadonome' LIMIT 1","users");
+			$updatequery = doquery("UPDATE {{table}} SET batalha_timer='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+			$updatequery = doquery("UPDATE {{table}} SET batalha_timer2='5' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+				
+		$updatequery = doquery("UPDATE {{table}} SET batalha_id='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_id='1' WHERE charname='$jogador' LIMIT 1","users");
+		
+		
+		
+        
+				
+        display("<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/duelo.gif\" /></td></tr></table>A primeira etapa para começar um duelo foi realizada. Envie esse link: <font color=red>http://nigeru.com/narutorpg/users.php?do=batalha1</font> para o Jogador o qual você deseja realizar o Duelo.<br><br>Se os dois jogadores já preencheram a página, acessem esse link: <font color=red><a href=\"http://nigeru.com/narutorpg/users.php?do=duelo\"> http://nigeru.com/narutorpg/users.php?do=duelo</a></font> ao mesmo tempo.<br /><br />Você pode <a href=\"index.php\">clicar aqui</a> para continuar jogando, caso não queira mais realizar um duelo, ou ainda <a href=\"users.php?do=batalha1\">iniciar uma novo Duelo</a>.","Realizar Duelo",false,false,false);
+        die();
+    }
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/duelo.gif\" /></td></tr></table>".gettemplate("batalha1");
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Realizar Duelo", false, false, false); 
+    
+}
+
+
+
+
+
+
+
+
+
+
+function resetarduelo() {
+global $topvar;
+$topvar = true;
+    /* testando se está logado */
+		//include('cookies.php');
+		 //$userrow = checkcookies();
+		 global $userrow;
+		 
+		 		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+			/*fim do teste */
+			
+			 
+			 //dados de batalha
+		$batalhanome = $userrow["batalha_nome"];
+		$batalhaid = $userrow["batalha_id"];
+		$batalhahp = $userrow["batalha_hp"];
+		
+		//fim
+		$hpjogador = $userrow["currenthp"];
+		$mpjogador = $userrow["currentmp"];
+	
+		
+		
+						
+
+   
+		
+		
+		$updatequery = doquery("UPDATE {{table}} SET currentmonstersleep='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdamage='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdefense='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_nome='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_hp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterimmune='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonster='' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer2='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_id='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_acao='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+			
+	
+	
+	
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/duelo.gif\" /></td></tr></table>Seu duelo atual foi resetado com sucesso. Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.";
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Realizar Duelo", false, false, false); 
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function duelo() {
+global $topvar;
+$topvar = true;
+    /* testando se está logado */
+		//include('cookies.php');
+		 //$userrow = checkcookies();
+		 global $userrow;
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		
+			if ($userrow["currentaction"] == "Fighting") {display("Você não pode acessar essa função no meio de uma batalha!","Erro",false,false,false);die(); }
+		$usuariologadoid = $userrow["id"];
+		$usuariologadonome = $userrow["charname"];
+		$usuriologadodinheiro = $userrow["gold"];
+			/*fim do teste */
+			
+			 
+			 //dados de batalha
+		$batalhanome = $userrow["batalha_nome"];
+		$batalhaid = $userrow["batalha_id"];
+		$batalhahp = $userrow["batalha_hp"];
+		
+		//fim
+		$hpjogador = $userrow["currenthp"];
+		$hpdosegundojogador = $userrow["currentmonsterhp"];
+		$mpjogador = $userrow["currentmp"];
+		$mpjogador2 = $userrow["currentmonsterimmune"];
+	
+		//fim
+				$timer = $userrow["batalha_timer"];
+				$timeraux = $userrow["batalha_timer2"];
+		$mosternofim = $userrow["batalha_acao"];
+		
+			
+	
+		
+		if ($mosternofim == $usuariologadonome.": ") {$mosternofim = "Não houve uma ação na rodada passada.";}
+		if ($mosternofim == "None") {$mosternofim = "Não houve uma ação na rodada passada.";}
+		
+		
+		
+		//colocando pra duelar somente no mesmo mapa
+	$monsterquery = doquery("SELECT * FROM {{table}} WHERE charname='$batalhanome' LIMIT 1", "users");
+    $jogador2row = mysql_fetch_array($monsterquery);
+  	
+		if ($userrow["longitude"] != $jogador2row["longitude"]) {display("Você só pode duelar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		if ($userrow["latitude"] != $jogador2row["latitude"]) {display("Você só pode duelar com um jogador que está no mesmo mapa que o seu! Clique <a href=\"index.php\">aqui</a> para voltar ao jogo.","Erro",false,false,false);die(); }
+		/*//fazer o timer 2
+					$userquery = doquery("SELECT * FROM {{table}} WHERE charname='$batalhanome' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { die("Não existe nenhuma conta com esse nome."); }
+		$userrow = mysql_fetch_array($userquery);
+		$timer2 = $userrow["batalha_timer"];
+		$userquery = doquery("SELECT * FROM {{table}} WHERE charname='$usuariologadonome' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { die("Não existe nenhuma conta com esse nome."); }
+		$userrow = mysql_fetch_array($userquery);
+		//fim
+        
+		//if ($batalhaid != 1) {die("Respeite a ordem de Duelo, envie esse link para o outro Jogador."); }
+		if  ($timer < 2) {if ($timer2 > 1){
+		$timer2 = $timer2 - 1;
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer='$timer2' WHERE charname='$batalhanome' LIMIT 1","users");
+		die("Aguarde...$timer segundos. Turno do segundo jogador.<meta HTTP-EQUIV='refresh' CONTENT='1;URL=users.php?do=duelo'>"); }
+		else{
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer='6' WHERE charname='$usuariologadonome' LIMIT 1","users");}
+		} */
+		
+						
+				//TIMER ANTIGO FALHO
+		/*$timer -= 5;
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer='$timer' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				if ($timer < 1) { 
+				if ($timeraux > 5) {
+				$updatequery = doquery("UPDATE {{table}} SET batalha_timer='6' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_timer2='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				
+				}
+				
+				else{
+				$timeraux += 1;
+				$updatequery = doquery("UPDATE {{table}} SET batalha_timer='6' WHERE charname='$batalhanome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_timer2='$timeraux' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				die("Aguarde o seu turno novamente.<meta HTTP-EQUIV='refresh' CONTENT='1;URL=users.php?do=duelo'>"); 
+				
+				}
+				}*/
+				//fazer duelo primeiro
+				if($batalhanome == None) {
+				display("Primeiro você deve escolher alguém para Duelar. Clique <a href=\"users.php?do=batalha1\">aqui</a>, para fazer isso.","Realizar Duelo",false,false,false);
+				die(); }
+				
+				
+				
+				
+				
+				
+				
+				//VITORIA E DERROTA.
+				if($hpjogador == 0) {
+				display("Ação do último turno:<br>".$mosternofim."<br><br>Você perdeu a batalha!<br>O seu HP é 0!<br><br><b>Vencedor:</b> $batalhanome<br><b>Perdedor:</b> $usuariologadonome","Realizar Duelo",false,false,false);
+				$updatequery = doquery("UPDATE {{table}} SET currentmonstersleep='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdamage='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdefense='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_nome='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_hp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterimmune='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonster='' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_acao='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+	
+				$updatequery = doquery("UPDATE {{table}} SET batalha_id='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				
+				die(); }
+				
+				if($hpdosegundojogador == 0){
+				display("Ação do último turno:<br>".$mosternofim."<br><br>Você ganhou a batalha!<br>O HP do seu Oponente é 0!<br><br><br><b>Vencedor:</b> $usuariologadonome<br><b>Perdedor:</b> $batalhanome","Realizar Duelo",false,false,false);
+				
+				$updatequery = doquery("UPDATE {{table}} SET currentmonstersleep='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdamage='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentuberdefense='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_nome='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_hp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonsterimmune='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET currentmonster='' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_timer='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		$updatequery = doquery("UPDATE {{table}} SET batalha_acao='None' WHERE charname='$usuariologadonome' LIMIT 1","users");
+		
+				$updatequery = doquery("UPDATE {{table}} SET batalha_id='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+				die(); }
+				
+				
+				//VEZ DE QUAL JOGADOR
+				
+				if($batalhaid == 0) {
+				display("Aguarde o seu turno novamente. O outro Jogador precisa fazer seu movimento.<meta HTTP-EQUIV='refresh' CONTENT='1;URL=users.php?do=duelo'>","Realizar Duelo",false,false,false);
+				die(); }
+
+					
+						
+				//JOGADOR SPELLS
+				  $pagearray = array();
+    $playerisdead = 0;
+    
+    $pagearray["magiclist"] = "";
+    $userspells = explode(",",$userrow["spells"]);
+    $spellquery = doquery("SELECT id,name FROM {{table}}", "spells");
+    while ($spellrow = mysql_fetch_array($spellquery)) {
+	        $spell = false;
+        foreach ($userspells as $a => $b) {
+            if ($b == $spellrow["id"]) { $spell = true; }
+        }
+        if ($spell == true) {
+				
+			//if ($spellrow["type"] != 3) {//menos spell de sleep
+            $pagearray["magiclist"] .= "<option value=\"".$spellrow["id"]."\">".$spellrow["name"]."</option>\n";
+			//}//termina aqui o spell
+        }
+        unset($spell);
+    }
+    if ($pagearray["magiclist"] == "") { $pagearray["magiclist"] = "<option value=\"0\">None</option>\n"; }
+    $magiclist = $pagearray["magiclist"];
+    
+    	$chancetoswingfirst = 1;
+		
+		
+		//FIM JOGADOR SPELLS		
+						
+						
+						
+						
+						
+						
+
+    if (isset($_POST["duelo"])) {
+        extract($_POST);
+		
+		//DADOS JOGADOR 1
+		$userquery = doquery("SELECT * FROM {{table}} WHERE charname='$usuariologadonome' LIMIT 1","users");
+		if (mysql_num_rows($userquery) != 1) { display("Não existe nenhuma conta com esse nome.","Erro",false,false,false);die(); }
+		$userrow = mysql_fetch_array($userquery);
+		
+		// DADOS JOGADOR 2.
+    $monsterquery = doquery("SELECT * FROM {{table}} WHERE charname='$batalhanome' LIMIT 1", "users");
+    $jogador2row = mysql_fetch_array($monsterquery);
+    $pagearray["monstername"] = $jogador2row["charname"];
+	$batalhahp2 = $jogador2row["batalha_hp"];
+		
+		   // Your turn.
+        $pagearray["yourturn"] = "";
+        $tohit = ceil(rand($userrow["attackpower"]*.75,$userrow["attackpower"])/3);
+        $toexcellent = rand(1,150);
+        if ($toexcellent <= sqrt($userrow["strength"])) { $tohit *= 2; $pagearray["yourturn"] .= "Hit Excelente!<br />"; }
+        $toblock = ceil(rand(($jogador2row["defensepower"]/10)*.75,($jogador2row["defensepower"]/10))/3);        
+        $tododge = rand(1,200);
+        if ($tododge <= sqrt($jogador2row["dexterity"]/6)) { 
+            $tohit = 0; $pagearray["yourturn"] .= "O jogador está desviando. Nenhum dano foi recebido por ele.<br />"; 
+            $monsterdamage = 0;
+        } else {
+            $monsterdamage = $tohit - $toblock;
+            if ($monsterdamage < 1) { $monsterdamage = 1; }
+            if ($userrow["currentuberdamage"] != 0) {
+                $monsterdamage += ceil($monsterdamage * ($userrow["currentuberdamage"]/100));
+            }
+						
+			
+        
+		
+		
+		 //parte teste, timer:
+		/*	 $updatequery = doquery("UPDATE {{table}} SET batalha_timer='1' WHERE charname='$usuariologadonome' LIMIT 1","users");
+	  $updatequery = doquery("UPDATE {{table}} SET batalha_timer='6' WHERE charname='$batalhanome' LIMIT 1","users");
+	  //fim timer  */
+	 
+	  
+        $pagearray["yourturn"] .= "Você atacou o jogador provocando $monsterdamage de dano.<br /><br />";
+		
+        $userrow["currentmonsterhp"] -= $monsterdamage;
+		$pagearray["monsterhp"] = "HP do Jogador: " . $userrow["currentmonsterhp"] . "<br /><br />";
+		
+		
+		//atualizando os dados de batalha, hp etc
+		   $updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='".$userrow["currentmonsterhp"]."', currenthp='$hpjogador' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+		   $updatequery = doquery("UPDATE {{table}} SET batalha_hp='".$userrow["currentmonsterhp"]."', currenthp='".$userrow["currentmonsterhp"]."', currentmonsterimmune='".$userrow["currentmp"]."', currentmonsterhp='$hpjogador' WHERE charname='$batalhanome' LIMIT 1", "users");
+		
+		
+		
+	       
+		}//fim da parte duelo
+        // JOGADOR ESTA MORTO.
+	 $variaveldapagina = "<b>".$usuariologadonome."</b>: ".$pagearray["yourturn"];
+		$updatequery = doquery("UPDATE {{table}} SET batalha_acao='$variaveldapagina' WHERE charname='$batalhanome' LIMIT 1","users");  
+	
+			
+		$updatequery = doquery("UPDATE {{table}} SET batalha_id='1' WHERE charname='$batalhanome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_id='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+        
+				
+        display("<b>Ações</b>:<br>$variaveldapagina<br><br>Aguarde o seu turno novamente.<meta HTTP-EQUIV='refresh' CONTENT='5;URL=users.php?do=duelo'>","Realizar Duelo",false,false,false);
+        die();
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	if (isset($_POST["spell"])) {
+      $healaravida = 0;  
+        // Your turn.
+        $pickedspell = $_POST["userspell"];
+        if ($pickedspell == 0) { display("Você deve selecionar um Jutsu primeiro. Por favor volte e tente novamente.", "Error"); die(); }
+        
+        $newspellquery = doquery("SELECT * FROM {{table}} WHERE id='$pickedspell' LIMIT 1", "spells");
+        $newspellrow = mysql_fetch_array($newspellquery);
+        $spell = false;
+        foreach($userspells as $a => $b) {
+            if ($b == $pickedspell) { $spell = true; }
+        }
+        if ($spell != true) { display("Você ainda não aprendeu esse Jutsu. Por favor volte e tente novamente.", "Error"); die(); }
+        if ($userrow["currentmp"] < $newspellrow["mp"]) { display("Você não tem Chakra suficiente para usar esse Jutsu. Por favor volte e tente novamente.", "Error"); die(); }
+		
+		
+		
+        if ($newspellrow["type"] == 1) { // Heal spell.
+            $newhp = $userrow["currenthp"] + $newspellrow["attribute"];
+            if ($userrow["maxhp"] < $newhp) { $newspellrow["attribute"] = $userrow["maxhp"] - $userrow["currenthp"]; $newhp = $userrow["currenthp"] + $newspellrow["attribute"]; }
+            $userrow["currenthp"] = $newhp;
+            $userrow["currentmp"] -= $newspellrow["mp"];
+            $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"]." e ganhou ".$newspellrow["attribute"]." Pontos de Vida.<br /><br />";
+			
+			//adicionando pontos de vida
+			$hpjogador += $newspellrow["attribute"];
+			if ($userrow["maxhp"] < $hpjogador) {$hpjogador = $userrow["maxhp"];}
+			$healaravida = 1;
+					
+			
+        } elseif ($newspellrow["type"] == 2) { // Hurt spell.
+		$variaveltb = 0;
+            if ($variaveltb == 0) {
+                $monsterdamage = rand((($newspellrow["attribute"]/6)*5), $newspellrow["attribute"]);
+                $userrow["currentmonsterhp"] -= $monsterdamage;
+                $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"]." e causou $monsterdamage de dano.<br /><br />";
+            } else {
+                $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"].", mas o jogador é imune à seu Jutsu.<br /><br />";
+            }
+			
+			 			//monstro imune ao sleep, eu adicionei
+        $variavel = 2;
+            $userrow["currentmp"] -= $newspellrow["mp"];
+			} 
+			/*elseif ($newspellrow["type"] == 3) { // Sleep spell.
+            if ($variavel != 2) {
+                $userrow["currentmonstersleep"] = $newspellrow["attribute"];
+                $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"].". O inimigo está dormindo.<br /><br />";
+            } else {
+                $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"].", mas o jogador é imune à ele.<br /><br />";
+            }*/
+			elseif ($newspellrow["type"] == 3) { // Sleep spell.
+               $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"].", mas os jogadores são imunes à ele.<br /><br />";
+            
+			
+			 
+	  
+            $userrow["currentmp"] -= $newspellrow["mp"];
+        } elseif ($newspellrow["type"] == 4) { // +Damage spell.
+            $userrow["currentuberdamage"] = $newspellrow["attribute"];
+            $userrow["currentmp"] -= $newspellrow["mp"];
+            $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"]." e ganhou ".$newspellrow["attribute"]."% de dano até o fim da batalha.<br /><br />";
+			
+			
+	  
+	  
+        } elseif ($newspellrow["type"] == 5) { // +Defense spell.
+            $userrow["currentuberdefense"] = $newspellrow["attribute"];
+            $userrow["currentmp"] -= $newspellrow["mp"];
+            $pagearray["yourturn"] = "Você usou o Jutsu: ".$newspellrow["name"]." e ganhou ".$newspellrow["attribute"]."% de defesa até o fim da batalha.<br /><br />";
+			
+			        
+        }
+            
+			
+			
+			
+			
+			//atualizando os dados de batalha, hp etc
+			
+		   $updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='".$userrow["currentmonsterhp"]."', currentuberdefense='".$userrow["currentuberdefense"]."', currentmp='".$userrow["currentmp"]."', currentuberdamage='".$userrow["currentuberdamage"]."', currentuberdamage='".$userrow["currentuberdamage"]."', currenthp='$hpjogador'  WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+		   
+		   $updatequery = doquery("UPDATE {{table}} SET batalha_hp='".$userrow["currentmonsterhp"]."', currenthp='".$userrow["currentmonsterhp"]."', currentmonsterimmune='$hpjogador', currentmonsterhp='$hpjogador' WHERE charname='$batalhanome' LIMIT 1", "users");
+		   
+		 /*  if ($healarvida != 0){
+		   $updatequery = doquery("UPDATE {{table}} SET currentmonsterhp='$healaravida' WHERE charname='$batalhanome' LIMIT 1","users");}*/
+			
+			
+			//terminando
+			
+        $variaveldapagina = "<b>".$usuariologadonome."</b>: ".$pagearray["yourturn"];
+		$updatequery = doquery("UPDATE {{table}} SET batalha_acao='$variaveldapagina' WHERE charname='$batalhanome' LIMIT 1","users");
+						
+			
+		$updatequery = doquery("UPDATE {{table}} SET batalha_id='1' WHERE charname='$batalhanome' LIMIT 1","users");
+				$updatequery = doquery("UPDATE {{table}} SET batalha_id='0' WHERE charname='$usuariologadonome' LIMIT 1","users");
+        
+				
+        display("<b>Ações</b>:<br>$variaveldapagina<br><br>Aguarde o seu turno novamente.<meta HTTP-EQUIV='refresh' CONTENT='5;URL=users.php?do=duelo'>","Realizar Duelo",false,false,false);
+            die();
+        }
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
+	
+	
+	
+	//CONTEUDO DA PAGINA AQUI !!!
+    $page = "<table width=\"100%\"><tr><td width=\"100%\" class=\"title\"><img src=\"images/duelo.gif\" /></td></tr></table>
+	Ação do último turno:<br>$mosternofim<br><br>
+	<table><tr><td><b>Seus Dados:</b><br><b>Nome</b>: $usuariologadonome<br><b>HP</b>: $hpjogador<br><b>CH</b>: $mpjogador</td>
+	
+	<td width=20></td><td><b>Desafiante</b><br><b>Nome</b>: $batalhanome<br><b>HP</b>: ".$userrow["currentmonsterhp"]."<br><b>CH</b>: $mpjogador2</td></tr></table>
+	
+	
+	
+	
+	<br><br>Comando?<br /><br />
+<form action=\"users.php?do=duelo\" method=\"post\">
+<input type=\"submit\" name=\"duelo\" value=\"Atacar\" /><br /><br />
+<select name=\"userspell\"><option value=\"0\">Escolha Um</option>$magiclist</select> <input type=\"submit\" name=\"spell\" value=\"Spell\" /><br /><br />
+</form><br><h2><a href=\"users.php?do=resetarduelo\">Cancelar Duelo</a></h2>"
+	
+	
+	
+	
+	
+	
+	
+	
+	;
+   $topnav = "<a href=\"index.php\"><img src=\"images/jogar.gif\" alt=\"Voltar a Jogar\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Ajuda\" border=\"0\" /></a>";
+    display($page, "Realizar Duelo", false, false, false); 
+    
+}
+
+
+
+
+
+
+
+
+
+
+?>

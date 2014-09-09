@@ -1,0 +1,153 @@
+<?php
+$userrow = checkcookies();
+//slots para backpack
+for ($i = 1; $i < 5; $i ++){
+if ($userrow["bp".$i] != "None"){
+$varbackpack[$i] = explode(",",$userrow["bp".$i]);
+$mostrar = "";
+$pastadoslot = "";
+if ($varbackpack[$i][2] > 3) {$pastadoslot = "drops/";}
+if ($varbackpack[$i][1] == "hp") {$varbackpack[$i][1] == "hp".$varbackpack[$i][2]; $mostrar = " HP + ".$varbackpack[$i][2];}
+if ($varbackpack[$i][1] == "mp") {$varbackpack[$i][1] == "hp".$varbackpack[$i][2]; $mostrar = " CH + ".$varbackpack[$i][2];}
+$bpcodigo[$i] = "<a href=\"backpack.php?qual=$i\"><img src=\"layoutnovo/equipamentos/$pastadoslot".$varbackpack[$i][1].".png\" width=\"34\" height=\"34\" hspace=\"0\" vspace=\"0\" border=\"0\" title=\"".$varbackpack[$i][0]."$mostrar\" /></a>";}else{
+$bpcodigo[$i] = "<img src=\"images/gif.gif\" width=\"34\" height=\"34\" hspace=\"0\" vspace=\"0\" border=\"0\"/></a>";}
+}//fim for
+
+
+
+$template = <<<THEVERYENDOFYOU
+<center><table width="206" border="0" cellspacing="0" cellpadding="0" background="layoutnovo/menuslados/meio.png">
+<tr><td height="187" width="224" colspan="3" background="layoutnovo/menuslados/kakashi.png"></td></tr>
+<tr background="layoutnovo/menuslados/meio.png"><td width="5"></td><td>
+
+<center>
+<a href="http://www.nigeru.com" target="_blank"><img src="http://img683.imageshack.us/img683/5948/button2y.gif" width="88" height="31" border="0" /></a>
+
+
+</center>
+
+</td><td width="5"></td>
+</tr><tr>
+<td width="206" colspan="3" height="21" background="layoutnovo/menuslados/baixo.png"></td>
+</tr></table></center>
+<br>
+
+
+<table width="215">
+<tr><td><center><img src="layoutnovo/buttons/personagem.png" alt="Character" title="Character" /></center></td></tr>
+<tr><td>
+
+<table border="0" cellpadding=0 cellspacing=0 background="layoutnovo/menuslados/meio.png">
+<tr><td colspan="3" width="224" height="34" background="layoutnovo/menuslados/cima.png"></td></tr><tr  background="layoutnovo/menuslados/meio.png">
+<td width="5"></td>
+<td>
+<center><img src="layoutnovo/avatares/{{avatar}}.png"><br>
+<a href="outros.php?do=avatar">Selecionar meu Avatar</a>.</center><br><br>
+<b>{{charname}}</b><br />
+Level: {{level}}<br />
+Exp: {{experience}}<br />
+Ryou: {{gold}}<br />
+HP: {{currenthp}}<br />
+CH: {{currentmp}}<br />
+TP: {{currenttp}}<br />
+{{statbars}}<br />
+<a href="javascript:opencharpopup()">Todos os Status</a><br>
+<a href="outroseatributos.php?do=atributos">Distribuir Pontos</a>
+
+</td>
+<td width="5"></td>
+</tr><tr><td colspan="3" width="224" height="21" background="layoutnovo/menuslados/baixo.png"></td></tr></table>
+
+</td></tr>
+</table><br />
+
+<table width="215">
+<tr><td><center><img src="layoutnovo/buttons/inventario.png" alt="Equipamentos" title="Equipamentos" /></center></td></tr>
+<tr><td>
+
+<table border="0" cellpadding=0 cellspacing=0 background="layoutnovo/menuslados/meio.png">
+<tr><td colspan="3" width="224" height="34" background="layoutnovo/menuslados/cima.png"></td></tr><tr  background="layoutnovo/menuslados/meio.png">
+<td width="5" ></td>
+<td>
+
+<center>
+<table border="0" cellspacing="0" cellpadding="0" background="layoutnovo/equipamentos/equipamentos.png" width="168" style="background-repeat:no-repeat;;background-position:left top"><tr>
+<td height="15" colspan="4"></td></tr><tr>
+<td height="37" width="23"></td><td width="31"></td><td width="31" style="background-repeat:no-repeat;;background-position:left top" background="layoutnovo/equipamentos/{{shieldid}}.png"></td><td colspan="2"></td></tr><tr>
+
+<td  height="34" width="23"></td><td width="31" style="background-repeat:no-repeat;;background-position:left top" background="layoutnovo/equipamentos/{{weaponid}}.png"></td><td width="31" style="background-repeat:no-repeat;;background-position:left top" background="layoutnovo/equipamentos/{{armorid}}.png"></td><td style="background-repeat:no-repeat;;background-position:left top" background="layoutnovo/equipamentos/{{weaponid}}d.png"></td></tr>
+<tr>
+<td colspan="4" height="35"></td>
+</table>
+
+
+<table border="5" cellspacing="0" 
+cellpadding="0" background="layoutnovo/equipamentos/drops/fundo.png" style="background-repeat:no-repeat;;background-position:left top" width="128">
+<tr height="3"></tr>
+<tr><td height="34" style="width: 0px;"></td><td background="layoutnovo/equipamentos/drops/{{slot1id}}.png" width="36" style="background-repeat:no-repeat;;background-position:left top" ></td><td background="layoutnovo/equipamentos/drops/{{slot2id}}.png" width="37" style="background-repeat:no-repeat;;background-position:left top"></td><td background="layoutnovo/equipamentos/drops/{{slot3id}}.png" width="35" style="background-repeat:no-repeat;;background-position:left top"></td><td></td></tr>
+<tr height="4"><td colspan="7"></td></tr>
+</table>
+</center>
+
+<table width="178">
+<tr><td><img src="images/icon_weapon.gif" alt="Arma" title="Arma" /></td><td width="100%">Arma: {{weaponname}}</td></tr>
+<tr><td><img src="images/icon_armor.gif" alt="Colete" title="Colete" /></td><td width="100%">Colete: {{armorname}}</td></tr>
+<tr><td><img src="images/icon_shield.gif" alt="Bandana" title="Bandana" /></td><td width="100%">Bandana: {{shieldname}}</td></tr>
+<tr><td><img src="images/orb.gif" alt="Item Adicional" title="Item Adicional" /></td><td width="100%">Slot 1: {{slot1name}}</td></tr>
+<tr><td><img src="images/orb.gif" alt="Item Adicional" title="Item Adicional" /></td><td width="100%">Slot 2: {{slot2name}}</td></tr>
+<tr><td><img src="images/orb.gif" alt="Item Adicional" title="Item Adicional" /></td><td width="100%">Slot 3: {{slot3name}}</td></tr>
+</table>
+
+</td>
+<td width="5"></td>
+</tr><tr><td colspan="3" width="224" height="21" background="layoutnovo/menuslados/baixo.png"></td></tr></table>
+</td></tr>
+</table><br />
+
+
+
+
+<table width="215">
+<tr><td><center><img src="layoutnovo/buttons/mochila.png" alt="Mochila" title="Mochila" /></center></td></tr>
+<tr><td>
+<table border="0" cellpadding=0 cellspacing=0 background="layoutnovo/menuslados/meio.png">
+<tr><td colspan="3" width="224" height="34" background="layoutnovo/menuslados/cima.png"></td></tr><tr  background="layoutnovo/menuslados/meio.png">
+<td width="5"></td>
+<td>
+<center>
+
+<center><img src="images/{{bpimagem}}.jpg" /><br>
+<table border="0" cellpadding="0" cellspacing="0" width="170" height="10" background="images/bpslots.jpg">
+<tr><td height="7" colspan="6"></td></tr>
+<tr><td width="12"></td><td width="34" height="34">$bpcodigo[1]</td><td width="34" height="34">$bpcodigo[2]</td><td width="34" height="34">$bpcodigo[3]</td><td width="34" height="34">$bpcodigo[4]</td><td width="12"></td></tr>
+</table>
+</center>
+
+
+</td>
+<td width="5"></td>
+</tr><tr><td colspan="3" width="224" height="21" background="layoutnovo/menuslados/baixo.png"></td></tr></table>
+</td></tr>
+</table><br />
+
+
+
+
+
+<table width="215">
+<tr><td><center><img src="layoutnovo/buttons/usarjutsu.png" alt="Usar Jutsu" title="Usar Jutsu" /></center></td></tr>
+<tr><td>
+<table border="0" cellpadding=0 cellspacing=0 background="layoutnovo/menuslados/meio.png">
+<tr><td colspan="3" width="224" height="34" background="layoutnovo/menuslados/cima.png"></td></tr><tr  background="layoutnovo/menuslados/meio.png">
+<td width="5"></td>
+<td>
+<center><img src="layoutnovo/menuslados/jutsu.png"></center>
+{{jutsudebuscahtml}}
+{{magiclist}}
+</td>
+<td width="5"></td>
+</tr><tr><td colspan="3" width="224" height="21" background="layoutnovo/menuslados/baixo.png"></td></tr></table>
+</td></tr>
+</table><br />
+THEVERYENDOFYOU;
+?>
