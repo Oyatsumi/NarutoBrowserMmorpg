@@ -43,6 +43,8 @@ Once you create a new account it is a normal account, not an admin account and t
 	}
 	}
 
+Or, you may, instead, alter the "gameopen" column on dk_control table from 0 to 1 to open the game.
+
 
 By Oyatsumi (Érick Oliveira Rodrigues).
 
