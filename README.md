@@ -57,3 +57,6 @@ And login with:
 ->123456
 
 Attention! If someone is logged on the account already you won't be able to login. Sorry about that.
+
+Here's a link with a series of psds used on the game, in case that would help>
+https://drive.google.com/file/d/0BxJH7y8eF0sjcmNsVGtNbFlNZkU/edit?usp=sharing
