@@ -5,6 +5,7 @@ as the one provided within this document.
 	-> You can also create an account here and do it: http://www.freewebhostingarea.com/
 2) Upload the .sql on the database (sql) folder from your phpMyAdmin on the "import" option, then, the database will
 created and populated.
+	-> Change the database name "databaseName" according to your preferences.
 3) Change the config.php file within the "src" folder to your mysql connection parameters, don't change the prefix variable.
 4) Open your domain in your browser and login with:
 	-> Account: Oyatsumi
