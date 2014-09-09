@@ -41,6 +41,7 @@ By Oyatsumi (Érick Oliveira Rodrigues).
 
 For test purposes you may access:
 http://narutorpg.orgfree.com/index.php
+
 And login with:
 ->Oyatsumi
 ->123456
