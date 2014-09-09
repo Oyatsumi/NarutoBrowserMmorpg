@@ -1,4 +1,4 @@
-narutobrowsermmorpg
+Naruto Browser Mmorpg
 ===================
 
 An open source naruto PHP/Javascript/CSS/HTML/SQL based online MMORPG.
