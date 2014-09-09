@@ -55,3 +55,4 @@ http://narutorpg.orgfree.com/index.php
 And login with:
 ->Oyatsumi
 ->123456
+Attention! If someone is logged on the account already you won't be able to login. Sorry about that.
