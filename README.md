@@ -35,6 +35,7 @@ Ps2.: You may access "admin.php" to alter some stuff of the game, but beware, so
 
 Ps3.: For you to play without an admin account ("authlevel == 1"), remove this code from index.php, for instance:
 Once you create a new account it is a normal account, not an admin account and the game won't run.
+
 	// Close game.
 	if ($controlrow["gameopen"] == 0) { 
 	if ($userrow["authlevel"] != 1){
