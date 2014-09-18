@@ -16,7 +16,7 @@ Attention! Don't try to host this game on your machine because it may induce var
 	
 2) Upload the .sql on the database (sql) folder from your phpMyAdmin on the "import" option, then, the database will be
 created and populated.
-	-> Change the database name "databaseName" according to your preferences and the your mySQL database name.
+	-> Change the database name "databaseName" (on the .sql file) according to your preferences and the name of your mySQL database name.
 	
 3) Change the config.php file within the "src" folder to your mysql connection parameters, don't change the prefix variable.
 
