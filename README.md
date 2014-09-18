@@ -1,7 +1,7 @@
 Naruto Browser Mmorpg
 ===================
 
-An open source naruto PHP/Javascript/CSS/HTML/SQL based online MMORPG.
+A fully functional open source naruto PHP/Javascript/CSS/HTML/SQL based online browser MMORPG.
 
 
 Facebook official group:
@@ -50,7 +50,7 @@ Or, you may, instead, alter the "gameopen" column on dk_control table from 0 to 
 Ps4.: You may change the theme of the game to whatever you want to and keep using the engine. You can also use the psds and the already done graphics as you wish.
 
 
-By Oyatsumi (Érick Oliveira Rodrigues).
+By Oyatsumi ( Érick Oliveira Rodrigues ).
 
 
 For test purposes you may access:
