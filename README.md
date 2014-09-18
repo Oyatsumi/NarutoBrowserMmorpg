@@ -17,7 +17,7 @@ as the one provided within this document.
 	
 2) Upload the .sql on the database (sql) folder from your phpMyAdmin on the "import" option, then, the database will be
 created and populated.
-	-> Change the database name "databaseName" according to your preferences.
+	-> Change the database name "databaseName" according to your preferences and the your mySQL database name.
 	
 3) Change the config.php file within the "src" folder to your mysql connection parameters, don't change the prefix variable.
 
