@@ -9,8 +9,7 @@ https://www.facebook.com/groups/957796797569032/
 
 
 
-Attention! Don't try to host this game on your machine because it may induce various errors, instead, use an online host such
-as the one provided within this document.
+Attention! Don't try to host this game on your machine because it may induce various errors on the php interpreter, instead, use an online host such as the one provided within this document. In order to put the game working you may follow the instructions below:
 
 1) Upload all the files within "src" to the host of your preference.
 	-> You can also create an account here and do it: http://www.freewebhostingarea.com/
