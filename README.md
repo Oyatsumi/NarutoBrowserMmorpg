@@ -15,7 +15,7 @@ as the one provided within this document.
 1) Upload all the files within "src" to the host of your preference.
 	-> You can also create an account here and do it: http://www.freewebhostingarea.com/
 	
-2) Upload the .sql on the database (sql) folder from your phpMyAdmin on the "import" option, then, the database will
+2) Upload the .sql on the database (sql) folder from your phpMyAdmin on the "import" option, then, the database will be
 created and populated.
 	-> Change the database name "databaseName" according to your preferences.
 	
