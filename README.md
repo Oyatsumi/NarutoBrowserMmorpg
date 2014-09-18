@@ -36,6 +36,8 @@ Ps2.: You may access "admin.php" to alter some stuff of the game, but beware, so
 Ps3.: For you to play without an admin account ("authlevel == 1"), remove this code from index.php, for instance:
 Once you create a new account it is a normal account, not an admin account and the game won't run.
 
+Ps4.: You may change the theme of the game to whatever you want to and keep using the engine. You can also use the psds and the already done graphics as you wish.
+
 	// Close game.
 	if ($controlrow["gameopen"] == 0) { 
 	if ($userrow["authlevel"] != 1){
