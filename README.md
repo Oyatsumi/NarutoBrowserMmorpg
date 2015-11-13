@@ -61,6 +61,7 @@ And login with:
 
 Attention! If someone is logged on the account already you won't be able to login. Sorry about that.
 Also, here is a link with a video demonstration: https://www.youtube.com/watch?v=dKdVN4uJirU
+Recently, someone just broke the online demo, so for now what works is the video.
 
 Here's a link with a series of psds used on the game, in case that could help >
 https://drive.google.com/file/d/0BxJH7y8eF0sjcmNsVGtNbFlNZkU/edit?usp=sharing
