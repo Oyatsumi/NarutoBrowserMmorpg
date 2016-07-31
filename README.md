@@ -33,6 +33,7 @@ Ps2.: You may access "admin.php" to alter some stuff of the game, but beware, so
 "monsters cards".
 
 Ps3.: To play without an admin account ("authlevel == 1"), remove this code from index.php:
+
 	// Close game.
 	if ($controlrow["gameopen"] == 0) { 
 	if ($userrow["authlevel"] != 1){
