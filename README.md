@@ -41,7 +41,7 @@ Ps3.: To play without an admin account ("authlevel == 1"), remove this piece of 
 	}
 	}
 	
-Once you create a new account it is a normal player account, not an admin account and the game won't run unless you remove the piece of code above.
+If you create a new account, the account is created as a normal player account, not an admin account, and the game won't run unless you remove the piece of code above.
 
 
 
