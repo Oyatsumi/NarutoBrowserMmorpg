@@ -21,6 +21,7 @@ created and populated.
 3) Change the config.php file within the "src" folder to your mysql connection parameters, don't change the prefix variable.
 
 4) Open your domain in your browser and login with:
+
 	-> Account: Oyatsumi
 	-> Pass.: 123456 
 
@@ -58,12 +59,15 @@ For test purposes you may access:
 http://narutorpg.orgfree.com/index.php
 
 And login with:
+
 ->Oyatsumi
+
 ->123456
 
 
 Attention! If someone is logged on the account already you won't be able to login. Sorry about that.
 Also, here is a link with a video demonstration: https://www.youtube.com/watch?v=dKdVN4uJirU
+
 Recently, someone just broke the online demo, so for now what works is the video.
 
 Here's a link with a series of psds used on the game, in case that could help >
