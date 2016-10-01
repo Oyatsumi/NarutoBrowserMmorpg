@@ -1,7 +1,7 @@
-Naruto Browser Mmo Rpg
+Naruto Browser Mmorpg
 ===================
 
-A fully functional open source naruto PHP/Javascript/CSS/HTML/SQL based online browser MMORPG.
+A fully functional open source naruto PHP/Javascript/CSS/HTML/SQL based online browser MMO RPG.
 
 
 Facebook official group:
