@@ -1,6 +1,6 @@
 <?php // lib.php :: Common functions used throughout the program.
 
-
+header("Content-Type: text/html;charset=ISO-8859-1");
 
 $starttime = getmicrotime();
 $numqueries = 0;
