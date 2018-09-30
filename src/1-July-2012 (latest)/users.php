@@ -41,8 +41,11 @@ if (isset($_GET["do"])) {
 
 function register() { // Register a new account.
     
+
     $controlquery = doquery("SELECT * FROM {{table}} WHERE id='1' LIMIT 1", "control");
     $controlrow = mysql_fetch_array($controlquery);
+
+
     
     if (isset($_POST["submit"])) {
         
@@ -113,12 +116,17 @@ function register() { // Register a new account.
         } else {
             $controlrow["verifytext"] = "";
         }
+
+
         $page = parsetemplate($page, $controlrow);
         
     }
     
     $topnav = "<a href=\"login.php?do=login\"><img src=\"images/button_login.gif\" alt=\"Log In\" border=\"0\" /></a><a href=\"users.php?do=register\"><img src=\"images/button_register.gif\" alt=\"Register\" border=\"0\" /></a><a href=\"help.php\"><img src=\"images/button_help.gif\" alt=\"Help\" border=\"0\" /></a>";
-    display($page, "Registrar", false, false, false);
+    
+
+display($page, "Registrar", false, false, false);
+
     
 }
 

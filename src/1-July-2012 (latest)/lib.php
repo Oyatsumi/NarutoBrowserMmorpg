@@ -346,7 +346,6 @@ function display($content, $title, $topnav=true, $leftnav=true, $rightnav=true, 
 
 
 
-
     $finalarray = array(
         "dkgamename"=>$controlrow["gamename"],
         "title"=>$title,
