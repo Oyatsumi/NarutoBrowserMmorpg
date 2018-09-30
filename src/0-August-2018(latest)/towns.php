@@ -82,7 +82,7 @@ function buy() { // Displays a list of available items for purchase.
         }
     }
     $page .= "</table><br />";
-    $page .= "Se você mudou de ideia, pode retornar ? <a href=\"index.php\">cidade</a>.</center>";
+    $page .= "Se você mudou de ideia, pode retornar à <a href=\"index.php\">cidade</a>.</center>";
     $title = "Comprar Itens";
     
     display($page, $title);
@@ -103,7 +103,7 @@ function buy2($id) { // Confirm user's intent to purchase item.
     $itemsrow = mysqli_fetch_array($itemsquery);
     
     if ($userrow["gold"] < $itemsrow["buycost"]) { global $conteudo;
-	$conteudo = personagemgeral("Você não tem Ryou suficiente para comprar esse item.<br /><br />Você pode retornar ? <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=buy\">shop</a>, ou usar os botões de direção para continuar explorando.", 'personagem1', 'Anari');
+	$conteudo = personagemgeral("Você não tem Ryou suficiente para comprar esse item.<br /><br />Você pode retornar à <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=buy\">shop</a>, ou usar os botões de direção para continuar explorando.", 'personagem1', 'Anari');
     buy(); die();}
     
     if ($itemsrow["type"] == 1) {
@@ -166,7 +166,7 @@ function buy3($id) { // Update user profile with new item & stats.
     $itemsrow = mysqli_fetch_array($itemsquery);
     
     if ($userrow["gold"] < $itemsrow["buycost"]) { global $conteudo;
-	$conteudo = personagemgeral("Você não tem Ryou suficiente para comprar esse item.<br /><br />Você pode retornar ? <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=buy\">shop</a>, ou usar os botões de direção para continuar explorando.", 'personagem1', 'Anari');
+	$conteudo = personagemgeral("Você não tem Ryou suficiente para comprar esse item.<br /><br />Você pode retornar à <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=buy\">shop</a>, ou usar os botões de direção para continuar explorando.", 'personagem1', 'Anari');
     buy(); die();}
     
     if ($itemsrow["type"] == 1) { // weapon
@@ -378,7 +378,7 @@ function maps() { // List maps the user can buy.
     }
     
     $page .= "</table><br />\n";
-    $page .= "Se você mudou de ideia, você pode retornar ? <a href=\"index.php\">cidade</a>.</center>";
+    $page .= "Se você mudou de ideia, você pode retornar à <a href=\"index.php\">cidade</a>.</center>";
     
     display($page, "Comprar Mapas");
     
@@ -414,7 +414,7 @@ function maps3($id) { // Add new map to user's profile.
     $townrow = mysqli_fetch_array($townquery);
     
     if ($userrow["gold"] < $townrow["mapprice"]) { global $conteudo; 
-	$conteudo = personagemgeral("Você não tem dinheiro suficiente para comprar esse mapa.<br /><br />Você pode retornar ? <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=maps\">shop</a>, ou usar os botões de direção para continuar explorando.", "personagem2", "Hanashi"); maps(); die();}
+	$conteudo = personagemgeral("Você não tem dinheiro suficiente para comprar esse mapa.<br /><br />Você pode retornar à <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=maps\">shop</a>, ou usar os botões de direção para continuar explorando.", "personagem2", "Hanashi"); maps(); die();}
     
     $mappedtowns = $userrow["towns"].",$id";
     $newgold = $userrow["gold"] - $townrow["mapprice"];
@@ -422,7 +422,7 @@ function maps3($id) { // Add new map to user's profile.
     $updatequery = doquery("UPDATE {{table}} SET towns='$mappedtowns',gold='$newgold' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
     
 	global $conteudo; 
-	$conteudo = personagemgeral("Obrigado por comprar esse mapa.<br /><br />Você pode retornar ? <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=maps\">shop</a>, ou usar os botões de direção para continuar explorando.", "personagem2", "Hanashi"); maps(); die();
+	$conteudo = personagemgeral("Obrigado por comprar esse mapa.<br /><br />Você pode retornar à <a href=\"index.php\">cidade</a>, <a href=\"index.php?do=maps\">shop</a>, ou usar os botões de direção para continuar explorando.", "personagem2", "Hanashi"); maps(); die();
     
 }
 

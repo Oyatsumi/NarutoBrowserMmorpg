@@ -25,6 +25,8 @@ function chatmap(){
         extract($_POST);
 		
 		if ($fala == ""){header('Location: index.php'); die();}
+
+        //mysqli_real_escape_string($fala);
 		
 		$chatquery = doquery("SELECT * FROM {{table}} WHERE latitude='".$userrow['latitude']."' AND longitude='".$userrow['longitude']."' order by id", "chatmap");
 		$i = 0;
