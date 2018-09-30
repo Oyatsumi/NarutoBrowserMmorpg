@@ -365,7 +365,7 @@ function opcaochar(nome){
 <table cellspacing="0" cellpadding="0" border="0"><tr><td width="2"></td><td><div style="position:relative;top:-10px">{{content}}</div>
 <br />
 <center><table width="90%"><tr>
-<td width="25%" align="center">Powered by <a href="http://nigeru.com" target="_new">Nigeru Animes</a></td><td width="25%" align="center">&copy; 2010 by Oyatsumi</td><td width="25%" align="center">{{totaltime}} Segundos, {{numqueries}} Queries</td><td width="25%" align="center">Vers?o {{version}} {{build}}</td>
+<td width="25%" align="center">Powered by <a href="http://nigeru.com" target="_new">Nigeru Animes</a></td><td width="25%" align="center">&copy; 2010 by Oyatsumi</td><td width="25%" align="center">{{totaltime}} Segundos, {{numqueries}} Queries</td><td width="25%" align="center">Versão {{version}} {{build}}</td>
 </tr></table></center>
 </td><td></td></tr></table>
 

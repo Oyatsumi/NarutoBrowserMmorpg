@@ -536,7 +536,9 @@ $qual = $_GET['qual'];
 
 	
 	//se nao tem item
-	if ($itensnobanco[$qual] == ""){header('Location: http://nigeru.com/narutorpg/funcaoitens.php?do=banco');die(); }
+	if ($itensnobanco[$qual] == ""){header('Location: '
+    .$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].
+    '?do=banco');die(); }
 		
 	//separa��o de subitens:
 	$itemseparado = explode(",",$itensnobanco[$qual]);
