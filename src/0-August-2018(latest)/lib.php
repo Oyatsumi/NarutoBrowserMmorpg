@@ -81,6 +81,8 @@ function gettemplate($templatename) { // SQL query for the template.
 }
 
 function parsetemplate($template, $array) { // Replace template with proper content.
+    header("Content-Type: text/html; charset=ISO-8859-1",true);
+
     
     foreach($array as $a => $b) {
         $template = str_replace("{{{$a}}}", $b, $template);
@@ -172,7 +174,7 @@ function admindisplay($content, $title) { // Finalize page and output to browser
 
 function display($content, $title, $topnav=true, $leftnav=true, $rightnav=true, $badstart=false) { // Finalize page and output to browser.
 
-    header("Content-Type: text/html; charset=ISO-8859-1",true);
+
     
     global $numqueries, $userrow, $controlrow, $version, $build;
     if (!isset($controlrow)) {
