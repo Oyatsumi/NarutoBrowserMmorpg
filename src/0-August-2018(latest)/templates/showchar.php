@@ -34,8 +34,8 @@ Especializa??o: {{charclass}}<br />
 Gradua??o: {{graduacao}}<br><br>
 
 Level: {{level}}<br />
-Experi?ncia: {{experience}} {{plusexp}}<br />
-Pr?ximo Level: {{nextlevel}}<br />
+Experiência: {{experience}} {{plusexp}}<br />
+Próximo Level: {{nextlevel}}<br />
 Ryou: {{gold}} {{plusgold}}<br />
 Pontos de Vida: {{currenthp}} / {{maxhp}}<br />
 Chakra: {{currentmp}} / {{maxmp}}<br />
@@ -44,16 +44,16 @@ Pontos Naturais: {{currentnp}} / {{maxnp}}<br />
 Pontos Elementais: {{currentep}} / {{maxep}}<br />
 Chance de Drop: <font color="gray">+{{droprate}}%</font><br /><br />
 
-For?a: {{strength}}<br />
+Força: {{strength}}<br />
 Destreza: {{dexterity}}<br />
 Poder de Ataque: {{attackpower}}<br />
 Poder de Defesa: {{defensepower}}<br /><br>
 
 Agilidade: {{agilidade}}<br>
 Sorte: {{sorte}}<br>
-Determina??o: {{determinacao}}<br>
-Precis?o: {{precisao}}<br>
-Intelig?ncia: {{inteligencia}}<br>
+Determinação: {{determinacao}}<br>
+Precisão: {{precisao}}<br>
+Inteligência: {{inteligencia}}<br>
 
 </td>
 <td width="5"></td></td>

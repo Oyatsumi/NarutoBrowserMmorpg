@@ -27,7 +27,7 @@ if (isset($_GET["do"])) {
 	
 	}
 
-function treinamento($conteudodois) {
+function treinamento($conteudodois="") {
 global $topvar;
 
 $topvar = true;

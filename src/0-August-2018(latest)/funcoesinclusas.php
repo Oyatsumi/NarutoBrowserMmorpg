@@ -37,7 +37,7 @@ function tempojutsu ($data, $hora, $tempoprapassar){
 
 //1 dia = 86400 segundos ou 1440 minutos.
 
-//lembrar que a hora padrï¿½o ï¿½ -2 horas do brasil.
+//lembrar que a hora padr?o ? -2 horas do brasil.
 
 	
 	$datajutsu = explode("/", $data);
@@ -47,10 +47,10 @@ function tempojutsu ($data, $hora, $tempoprapassar){
 
 
 	
-	//quantos anos a frente ï¿½ tras ou mesmo.
+	//quantos anos a frente ? tras ou mesmo.
 		$quantosanos = ($datahoje[2] - $datajutsu[2]);
 	
-	//quantos meses, diferenï¿½a das datas.
+	//quantos meses, diferen?a das datas.
 		$mesquantos = ($datahoje[1] - $datajutsu[1]);
 		$mesquantos += ($quantosanos *12);
 
@@ -113,7 +113,7 @@ function tempopassarsg ($data, $hora, $tempoprapassar){
 
 //1 dia = 86400 segundos ou 1440 minutos.
 
-//lembrar que a hora padrï¿½o ï¿½ -2 horas do brasil.
+//lembrar que a hora padr?o ? -2 horas do brasil.
 
 
 	
@@ -124,10 +124,10 @@ function tempopassarsg ($data, $hora, $tempoprapassar){
 
 
 	
-	//quantos anos a frente ï¿½ tras ou mesmo.
+	//quantos anos a frente ? tras ou mesmo.
 		$quantosanos = ($datahoje[2] - $datajutsu[2]);
 	
-	//quantos meses, diferenï¿½a das datas.
+	//quantos meses, diferen?a das datas.
 		$mesquantos = ($datahoje[1] - $datajutsu[1]);
 		$mesquantos += ($quantosanos *12);
 
@@ -199,7 +199,7 @@ function senjutsu(){
 	if ($userrow["senjutsuhtml"] != ""){//o jogador possui o senjutsu.
 			
 			$segundospassarpsenjutsu = 3;
-			if ($userrow["senjutsuhtml"] == "fechado"){//possui e o olho estï¿½ fechado.
+			if ($userrow["senjutsuhtml"] == "fechado"){//possui e o olho est? fechado.
 					header('Location: ./index.php');die();
 			}else{//se o olho estiver aberto
 					include('funcoesinclusas.php');
@@ -250,7 +250,7 @@ function senjutsu(){
 if (!function_exists('personagemmissao')){
 function personagemmissao($cont, $townrow){
 global $userrow, $valorlib;
-$valorlib = 2;//para nï¿½o declarar lib novamente.
+$valorlib = 2;//para n?o declarar lib novamente.
 $cont = " 
 <center><table width=\"462\" cellspacing=\"0\" cellpadding=\"0\"><tr background=\"layoutnovo/personagem/cima.jpg\"><td width=\"50\"></td><td height=\"21\"></td><td width=\"8\"></td></tr><tr background=\"layoutnovo/personagem/meio.jpg\"><td></td><td><img src=\"layoutnovo/personagem/".$townrow["id"].".png\" align=\"left\"><b>".$townrow["kage"]." diz:</b><br>
 ".$cont."
@@ -270,7 +270,7 @@ if (!function_exists('personagemgeral')){
 function personagemgeral($cont, $avatar="1.png", $avatarnome="NPC", $sempular=""){
 global $userrow, $valorlib;
 if ($sempular == ""){$sempular = "<br>";}else{$sempular = "";}
-$valorlib = 2;//para nï¿½o declarar lib novamente.
+$valorlib = 2;//para n?o declarar lib novamente.
 $cont = "<center><table width=\"462\" cellspacing=\"0\" cellpadding=\"0\" background=\"layoutnovo/personagem/meio.jpg\"><tr background=\"layoutnovo/personagem/cima.jpg\"><td background=\"layoutnovo/personagem/cima.jpg\" height=\"21\"></td></tr><tr background=\"layoutnovo/personagem/meio.jpg\"><td><table width=\"100%\"><tr><td width=\"50\"></td><td width=\"*\"><img src=\"layoutnovo/personagem/".$avatar.".png\" align=\"left\"><b>".$avatarnome." diz:</b><br>
 ".$cont."
 </td><td width=\"8\"></td></tr></table>   </td></tr><tr background=\"layoutnovo/personagem/baixo.jpg\"><td background=\"layoutnovo/personagem/baixo.jpg\" height=\"21\"></td></tr></table></center>$sempular
@@ -288,7 +288,7 @@ return $cont;
 if (!function_exists('elementoganhador')){
 function elementoganhador($primeiro, $segundo, &$pontosdeelemento){
 
-//Win referente a multiplicaï¿½ï¿½o dos danos.
+//Win referente a multiplica??o dos danos.
 if (($primeiro == "agua") && ($segundo == "fogo")){$win = 3/2; $mult = $userrow['sorte'];}
 elseif (($primeiro == "fogo") && ($segundo == "agua")){$win = 1/2; $mult = $userrow['determinacao'];}
 elseif (($primeiro == "fogo") && ($segundo == "vento")){$win = 3/2; $mult = $userrow['determinacao'];}
@@ -331,7 +331,7 @@ if (!function_exists('conteudoexplic')){
 function conteudoexplic($iditem, $tipo, $objeto, $durabilidade){
 	
 	if (!is_numeric($iditem)){
-			if ($iditem == "hp"){$conteudo = "HP:<font color=darkblue> + ".$tipo."</font><br>Quantidade: ".$durabilidade; $objnome = "Poï¿½ï¿½o de Vida";}
+			if ($iditem == "hp"){$conteudo = "HP:<font color=darkblue> + ".$tipo."</font><br>Quantidade: ".$durabilidade; $objnome = "Poção de Vida";}
 			$retornar = "explicdrop('$objeto', '".$objnome."', '$conteudo', '1', '1')";
 			return $retornar;			
 	}
@@ -361,17 +361,17 @@ function conteudoexplic($iditem, $tipo, $objeto, $durabilidade){
 					if ($novaatr[0] == "defensepower"){$novaatr[0] = "Poder de Defesa";}
 					elseif ($novaatr[0] == "attackpower"){$novaatr[0] = "Poder de Ataque";}
 					elseif ($novaatr[0] == "droprate"){$novaatr[0] = "Chance de Drop"; $fim = "%";}
-					elseif ($novaatr[0] == "strength"){$novaatr[0] = "Forï¿½a";}
+					elseif ($novaatr[0] == "strength"){$novaatr[0] = "Força";}
 					elseif ($novaatr[0] == "dexterity"){$novaatr[0] = "Destreza";}
 					elseif ($novaatr[0] == "maxhp"){$novaatr[0] = "Max HP";}
 					elseif ($novaatr[0] == "maxmp"){$novaatr[0] = "Max CH";}
 					elseif ($novaatr[0] == "maxtp"){$novaatr[0] = "Max TP";}
 					elseif ($novaatr[0] == "maxnp"){$novaatr[0] = "Max NP";}
 					elseif ($novaatr[0] == "maxep"){$novaatr[0] = "Max EP";}
-					elseif ($novaatr[0] == "determinacao"){$novaatr[0] = "Determinaï¿½ï¿½o";}
-					elseif ($novaatr[0] == "precisao"){$novaatr[0] = "Precisï¿½o";}
-					elseif ($novaatr[0] == "goldbonus"){$novaatr[0] = "Bï¿½nus Ryou"; $fim = "%";}
-					elseif ($novaatr[0] == "expbonus"){$novaatr[0] = "Bï¿½nus Exp."; $fim = "%";}
+					elseif ($novaatr[0] == "determinacao"){$novaatr[0] = "Determinação";}
+					elseif ($novaatr[0] == "precisao"){$novaatr[0] = "Precisão";}
+					elseif ($novaatr[0] == "goldbonus"){$novaatr[0] = "Bônus Ryou"; $fim = "%";}
+					elseif ($novaatr[0] == "expbonus"){$novaatr[0] = "Bônus Exp."; $fim = "%";}
 			//fim renomear
 			if ($novaatr[1] > 0){$novaatr[1] = "<font color=darkblue>+".$novaatr[1]."$fim</font>";}else{$novaatr[1] = "<font color=red>".$novaatr[1]."$fim</font>";}
 			$conteudo .= ucfirst($novaatr[0]).": ".$novaatr[1]."<br>";}
@@ -392,17 +392,17 @@ function conteudoexplic($iditem, $tipo, $objeto, $durabilidade){
 					if ($novaatr[0] == "defensepower"){$novaatr[0] = "Poder de Defesa";}
 					elseif ($novaatr[0] == "attackpower"){$novaatr[0] = "Poder de Ataque";}
 					elseif ($novaatr[0] == "droprate"){$novaatr[0] = "Chance de Drop"; $fim = "%";}
-					elseif ($novaatr[0] == "strength"){$novaatr[0] = "Forï¿½a";}
+					elseif ($novaatr[0] == "strength"){$novaatr[0] = "Força";}
 					elseif ($novaatr[0] == "dexterity"){$novaatr[0] = "Destreza";}
 					elseif ($novaatr[0] == "maxhp"){$novaatr[0] = "Max HP";}
 					elseif ($novaatr[0] == "maxmp"){$novaatr[0] = "Max CH";}
 					elseif ($novaatr[0] == "maxtp"){$novaatr[0] = "Max TP";}
 					elseif ($novaatr[0] == "maxnp"){$novaatr[0] = "Max NP";}
 					elseif ($novaatr[0] == "maxep"){$novaatr[0] = "Max EP";}
-					elseif ($novaatr[0] == "determinacao"){$novaatr[0] = "Determinaï¿½ï¿½o";}
-					elseif ($novaatr[0] == "precisao"){$novaatr[0] = "Precisï¿½o";}
-					elseif ($novaatr[0] == "goldbonus"){$novaatr[0] = "Bï¿½nus Ryou"; $fim = "%";}
-					elseif ($novaatr[0] == "expbonus"){$novaatr[0] = "Bï¿½nus Exp."; $fim = "%";}
+					elseif ($novaatr[0] == "determinacao"){$novaatr[0] = "Determinação";}
+					elseif ($novaatr[0] == "precisao"){$novaatr[0] = "Precisão";}
+					elseif ($novaatr[0] == "goldbonus"){$novaatr[0] = "Bônus Ryou"; $fim = "%";}
+					elseif ($novaatr[0] == "expbonus"){$novaatr[0] = "Bônus Exp."; $fim = "%";}
 					//fim renomear
 				if ($novaatr[1] > 0){$novaatr[1] = "<font color=darkblue>+".$novaatr[1]."$fim</font>";}else{$novaatr[1] = "<font color=red>".$novaatr[1]."$fim</font>";}
 				$conteudo .= ucfirst($novaatr[0]).": ".$novaatr[1];
@@ -414,17 +414,17 @@ function conteudoexplic($iditem, $tipo, $objeto, $durabilidade){
 					if ($novaatr[0] == "defensepower"){$novaatr[0] = "Poder de Defesa";}
 					elseif ($novaatr[0] == "attackpower"){$novaatr[0] = "Poder de Ataque";}
 					elseif ($novaatr[0] == "droprate"){$novaatr[0] = "Chance de Drop"; $fim = "%";}
-					elseif ($novaatr[0] == "strength"){$novaatr[0] = "Forï¿½a";}
+					elseif ($novaatr[0] == "strength"){$novaatr[0] = "Força";}
 					elseif ($novaatr[0] == "dexterity"){$novaatr[0] = "Destreza";}
 					elseif ($novaatr[0] == "maxhp"){$novaatr[0] = "Max HP";}
 					elseif ($novaatr[0] == "maxmp"){$novaatr[0] = "Max CH";}
 					elseif ($novaatr[0] == "maxtp"){$novaatr[0] = "Max TP";}
 					elseif ($novaatr[0] == "maxnp"){$novaatr[0] = "Max NP";}
 					elseif ($novaatr[0] == "maxep"){$novaatr[0] = "Max EP";}
-					elseif ($novaatr[0] == "determinacao"){$novaatr[0] = "Determinaï¿½ï¿½o";}
-					elseif ($novaatr[0] == "precisao"){$novaatr[0] = "Precisï¿½o";}
-					elseif ($novaatr[0] == "goldbonus"){$novaatr[0] = "Bï¿½nus Ryou"; $fim = "%";}
-					elseif ($novaatr[0] == "expbonus"){$novaatr[0] = "Bï¿½nus Exp."; $fim = "%";}
+					elseif ($novaatr[0] == "determinacao"){$novaatr[0] = "Determinação";}
+					elseif ($novaatr[0] == "precisao"){$novaatr[0] = "Precisão";}
+					elseif ($novaatr[0] == "goldbonus"){$novaatr[0] = "Bônus Ryou"; $fim = "%";}
+					elseif ($novaatr[0] == "expbonus"){$novaatr[0] = "Bônus Exp."; $fim = "%";}
 					//fim renomear	
 				if ($novaatr[1] > 0){$novaatr[1] = "<font color=darkblue>+".$novaatr[1]."$fim</font>";}else{$novaatr[1] = "<font color=red>".$novaatr[1]."$fim</font>";}
 				$conteudo .= "<br>".ucfirst($novaatr[0]).": ".$novaatr[1];

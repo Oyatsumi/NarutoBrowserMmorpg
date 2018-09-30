@@ -33,17 +33,17 @@ $jogador = $_GET['jogador'];
 $msg = $_GET['msg'];
 $html = $_GET['html'];
 
-if ($jogador != ""){$msg = "Para realizar uma troca com o jogador ".$jogador.", pressione o botï¿½o Realizar Nova Troca.";}
+if ($jogador != ""){$msg = "Para realizar uma troca com o jogador ".$jogador.", pressione o bot?o Realizar Nova Troca.";}
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
+		if ($userrow == false) { display("Por favor fa?a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa a??o.","Erro",false,false,false);die(); }
 
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voc? n?o pode acessar essa fun??o no meio de uma batalha!');die(); }
 		
 	$ryounomomento = $userrow["gold"];
 		
@@ -53,7 +53,7 @@ if ($jogador != ""){$msg = "Para realizar uma troca com o jogador ".$jogador.", 
 	for ($i = 1; $i < 5; $i++){
 	if ($userrow["bp".$i] != "None"){
 	$itemseparado = explode(",",$userrow["bp".$i]);
-	//saber que tipo de arma ï¿½
+	//saber que tipo de arma ?
 	$img = "orb_img";
 	if ($itemseparado[2] == 1) {$tipo = "weapon"; $img = "icon_weapon";}
 	elseif ($itemseparado[2] == 2) {$tipo = "armor"; $img = "icon_armor";}
@@ -101,25 +101,25 @@ if ($jogador != ""){$msg = "Para realizar uma troca com o jogador ".$jogador.", 
 							if ($itemtrocaseparado[3] != "None"){//se a troca contiver um item.
 							$subitemdividido = explode(",",$itemtrocaseparado[1]);
 							
-								//saber que tipo de arma ï¿½
+								//saber que tipo de arma ?
 								include('funcoesinclusas.php');
 								iconeitemmochila($itemtrocaseparado, $img1, $dur1);
 
 							
 							
-							}else{$itemtrocaseparado[1] = "Nenhum Item";}//se nï¿½o houve item.
+							}else{$itemtrocaseparado[1] = "Nenhum Item";}//se n?o houve item.
 							//mostrar os itens para troca e perguntar se aceita. JOGADOR 2
 							$itemtrocaseparado2 = explode(";",$userrow["trocajogador2"]);
 							if ($itemtrocaseparado2[3] != "None"){//se a troca contiver um item.
 							$subitemdividido2 = explode(",",$itemtrocaseparado2[1]);
 							
 							
-								//saber que tipo de arma ï¿½
+								//saber que tipo de arma ?
 								include('funcoesinclusas.php');
 								iconeitemmochila($itemtrocaseparado2, $img2, $dur2);
 
 							
-							}else{$itemtrocaseparado2[1] = "Nenhum Item";}//se nï¿½o houve item.
+							}else{$itemtrocaseparado2[1] = "Nenhum Item";}//se n?o houve item.
 							
 							
 							$nomepaparecerali = $userrow["charname"];
@@ -228,15 +228,15 @@ global $topvar;
 $topvar = true;
 
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
 
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Você não pode acessar essa função no meio de uma batalha!');die(); }
 		
 	$ryounomomento = $userrow["gold"];
 		
@@ -251,22 +251,22 @@ $topvar = true;
 		
 	//conferindo jogador
 	$userquery2 = doquery("SELECT * FROM {{table}} WHERE charname='$jogador' LIMIT 1", "users");
-	if (mysqli_num_rows($userquery2) != 1) { header('Location: ./troca.php?do=troca&msg=Nï¿½o existe nenhum jogador com esse nome para realizar uma troca.');die(); }
+	if (mysqli_num_rows($userquery2) != 1) { header('Location: ./troca.php?do=troca&msg=Não existe nenhum jogador com esse nome para realizar uma troca.');die(); }
     $userpara = mysqli_fetch_array($userquery2);
 	//quantidade de ryou
-	if (!is_numeric($ryoutroca)){header('Location: ./troca.php?do=troca&msg=O campo quantidade de Ryou precisa ser um nï¿½mero ou precisa ser deixado em branco.');die(); }
+	if (!is_numeric($ryoutroca)){header('Location: ./troca.php?do=troca&msg=O campo quantidade de Ryou precisa ser um número ou precisa ser deixado em branco.');die(); }
 	if ($ryoutroca < 0){header('Location: ./troca.php?do=troca&msg=O campo quantidade de Ryou precisa ser maior que 0.');die(); }
-	if ($ryoutroca > $userrow["gold"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ nï¿½o pode trocar mais Ryou que vocï¿½ possui.');die(); }
+	if ($ryoutroca > $userrow["gold"]){header('Location: ./troca.php?do=troca&msg=Você não pode trocar mais Ryou que você possui.');die(); }
 	//sem item na bp
-	if ($userrow["bp".$qual] == "None"){header('Location: ./troca.php?do=troca&msg=Vocï¿½ nï¿½o possui nenhum item no slot da backpack que selecionou.');die(); }
-	if ($qual > 4){header('Location: ./troca.php?do=troca&msg=Erro ou tentativa de trapaï¿½a.');die(); }
-	if ($qual < 0){header('Location: ./troca.php?do=troca&msg=Erro ou tentativa de trapaï¿½a.');die(); }
+	if ($userrow["bp".$qual] == "None"){header('Location: ./troca.php?do=troca&msg=Você não possui nenhum item no slot da backpack que selecionou.');die(); }
+	if ($qual > 4){header('Location: ./troca.php?do=troca&msg=Erro ou tentativa de trapaça.');die(); }
+	if ($qual < 0){header('Location: ./troca.php?do=troca&msg=Erro ou tentativa de trapaça.');die(); }
 	if($qual == 0){$qual = "";}
 	//mesmo mapa erro.
-	if ($userrow["latitude"] != $userpara["latitude"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ precisa estar no mesmo mapa que o outro jogador para realizar uma troca.');die(); }
-	if ($userrow["longitude"] != $userpara["longitude"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ precisa estar no mesmo mapa que o outro jogador para realizar uma troca.');die(); }
+	if ($userrow["latitude"] != $userpara["latitude"]){header('Location: ./troca.php?do=troca&msg=Você precisa estar no mesmo mapa que o outro jogador para realizar uma troca.');die(); }
+	if ($userrow["longitude"] != $userpara["longitude"]){header('Location: ./troca.php?do=troca&msg=Você precisa estar no mesmo mapa que o outro jogador para realizar uma troca.');die(); }
 	//mesmo jogador.
-	if ($userrow["charname"] == $userpara["charname"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ nï¿½o pode realizar uma troca com vocï¿½ mesmo.');die(); }
+	if ($userrow["charname"] == $userpara["charname"]){header('Location: ./troca.php?do=troca&msg=Você não pode realizar uma troca com você mesmo.');die(); }
 	
 	//se nao enviar ryou
 	if ($ryoutroca == "") {$ryoutroca = 0;}
@@ -277,13 +277,13 @@ $topvar = true;
 	if ($userpara["bp3"] != "None") {$var += 1;}else{$bpcerto = "bp3";}
 	if ($userpara["bp2"] != "None") {$var += 1;}else{$bpcerto = "bp2";}
 	if ($userpara["bp1"] != "None") {$var += 1;}else{$bpcerto = "bp1";}
-	if ($var == 4){ header("Location: ./troca.php?do=troca&msg=O jogador o qual vocï¿½ quer realizar uma troca, nï¿½o possui espaï¿½os livres em sua Mochila. Peï¿½a-o para esvaziar um espaï¿½o.");die(); }
+	if ($var == 4){ header("Location: ./troca.php?do=troca&msg=O jogador o qual você quer realizar uma troca, não possui espaços livres em sua Mochila. Peça-o para esvaziar um espaço.");die(); }
 	
 	
 	$userrow["trocajogador1"] = $jogador.";".$userrow["bp".$qual].";".$ryoutroca.";".$bpcerto;
 	$userpara["trocajogador2"] = $jogador.";".$userrow["bp".$qual].";".$ryoutroca.";".$bpcerto;
 	
-	}else{//fim do se for enviar um item. ///else ï¿½ se nï¿½o tiver envio de item
+	}else{//fim do se for enviar um item. ///else ? se n?o tiver envio de item
 	
 	$userrow["trocajogador1"] = $jogador.";None;".$ryoutroca.";None";
 	$userpara["trocajogador2"] = $jogador.";None;".$ryoutroca.";None";
@@ -298,12 +298,12 @@ $topvar = true;
 	}//fim get form
 	
 	
-		//histï¿½rico adicionando.. historico
+		//histárico adicionando.. historico
 	$historico = $userpara["historico"];
 	if ($historico == "None"){
-		$historico = "O jogador ".$userrow["charname"]." estï¿½ te chamando para realizar uma troca. <a href=\"troca.php?do=troca&jogador=".$userrow["charname"]."\" target=\"_top\">ACEITAR</a>.";
+		$historico = "O jogador ".$userrow["charname"]." está te chamando para realizar uma troca. <a href=\"troca.php?do=troca&jogador=".$userrow["charname"]."\" target=\"_top\">ACEITAR</a>.";
 	}else{
-		$historico .= ";;O jogador ".$userrow["charname"]." estï¿½ te chamando para realizar uma troca. <a href=\"troca.php?do=troca&jogador=".$userrow["charname"]."\" target=\"_top\">ACEITAR</a>.";
+		$historico .= ";;O jogador ".$userrow["charname"]." está te chamando para realizar uma troca. <a href=\"troca.php?do=troca&jogador=".$userrow["charname"]."\" target=\"_top\">ACEITAR</a>.";
 	}
 	 $updatequery = doquery("UPDATE {{table}} SET historico='".$historico."' WHERE id='".$userpara["id"]."' LIMIT 1", "users");
 	
@@ -358,38 +358,38 @@ global $topvar;
 $topvar = true;
 
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
 
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Você não pode acessar essa função no meio de uma batalha!');die(); }
 		
 	$ryounomomento = $userrow["gold"];
 	
 	if ($userrow["trocajogador1"] == "None" || $userrow["trocajogador2"] == "None"){
-	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
 	
 	$separartroca = explode(";",$userrow["trocajogador1"]);
 	$jogador = $separartroca[0];
 		
 	//conferindo jogador
 	$userquery2 = doquery("SELECT * FROM {{table}} WHERE charname='$jogador' LIMIT 1", "users");
-	if (mysqli_num_rows($userquery2) != 1) { header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	if (mysqli_num_rows($userquery2) != 1) { header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
     $userpara = mysqli_fetch_array($userquery2);
 	//quantidade de ryou
 	
-	if ($userrow["latitude"] != $userpara["latitude"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
-	if ($userrow["longitude"] != $userpara["longitude"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
+	if ($userrow["latitude"] != $userpara["latitude"]){header('Location: ./troca.php?do=troca&msg=Você precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
+	if ($userrow["longitude"] != $userpara["longitude"]){header('Location: ./troca.php?do=troca&msg=Você precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
 	
 	
 	if ($userrow["trocajogador1"] != $userpara["trocajogador2"]){
-	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
 	if ($userrow["trocajogador2"] != $userpara["trocajogador1"]){
-	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
 	
 	
 	
@@ -442,15 +442,15 @@ global $topvar;
 $topvar = true;
 
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
 
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Você não pode acessar essa função no meio de uma batalha!');die(); }
 		
 	$ryounomomento = $userrow["gold"];
 	
@@ -462,18 +462,18 @@ $topvar = true;
 		
 	//conferindo jogador
 	$userquery2 = doquery("SELECT * FROM {{table}} WHERE charname='$jogador' LIMIT 1", "users");
-	if (mysqli_num_rows($userquery2) != 1) { header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	if (mysqli_num_rows($userquery2) != 1) { header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
     $userpara = mysqli_fetch_array($userquery2);
 	//quantidade de ryou
 	
-	if ($userrow["latitude"] != $userpara["latitude"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
-	if ($userrow["longitude"] != $userpara["longitude"]){header('Location: ./troca.php?do=troca&msg=Vocï¿½ precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
+	if ($userrow["latitude"] != $userpara["latitude"]){header('Location: ./troca.php?do=troca&msg=Você precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
+	if ($userrow["longitude"] != $userpara["longitude"]){header('Location: ./troca.php?do=troca&msg=Você precisa estar no mesmo mapa que o outro jogador para concluir essa troca.');die(); }
 	
 	
 	if ($userrow["trocajogador1"] != $userpara["trocajogador2"]){
-	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
 	if ($userrow["trocajogador2"] != $userpara["trocajogador1"]){
-	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
 	
 	
 	
@@ -481,13 +481,13 @@ $topvar = true;
 	
 	if ($separartroca[3] != "None"){
 	
-	//saber qual ï¿½ o slot da bp q ta o item da troca.
+	//saber qual ? o slot da bp q ta o item da troca.
 	$soma = 0;
 	if ($userrow["bp1"] == $separartroca[1]) {$ocerto = "bp1";}else{$soma += 1;}
 	if ($userrow["bp2"] == $separartroca[1]) {$ocerto = "bp2";}else{$soma += 1;}
 	if ($userrow["bp3"] == $separartroca[1]) {$ocerto = "bp3";}else{$soma += 1;}
 	if ($userrow["bp4"] == $separartroca[1]) {$ocerto = "bp4";}else{$soma += 1;}
-	if ($soma == 4){header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	if ($soma == 4){header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
 	//fim saber backpack.
 	
 	
@@ -510,13 +510,13 @@ $topvar = true;
 	
 	if ($separartroca2[3] != "None"){
 	
-	//saber qual ï¿½ o slot da bp q ta o item da troca.
+	//saber qual ? o slot da bp q ta o item da troca.
 	$soma = 0;
 	if ($userpara["bp1"] == $separartroca2[1]) {$ocerto2 = "bp1";}else{$soma += 1;}
 	if ($userpara["bp2"] == $separartroca2[1]) {$ocerto2 = "bp2";}else{$soma += 1;}
 	if ($userpara["bp3"] == $separartroca2[1]) {$ocerto2 = "bp3";}else{$soma += 1;}
 	if ($userpara["bp4"] == $separartroca2[1]) {$ocerto2 = "bp4";}else{$soma += 1;}
-	if ($soma == 4){header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusï¿½o da troca, por favor recomece a troca novamente.');die(); }
+	if ($soma == 4){header('Location: ./troca.php?do=troca&msg=Houve um erro na conclusão da troca, por favor recomece a troca novamente.');die(); }
 	//fim saber backpack.
 	
 	
