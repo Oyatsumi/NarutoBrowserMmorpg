@@ -16,7 +16,7 @@ $nomechar = $_GET['nomechar'];
 
 
     $userquery = doquery("SELECT * FROM {{table}} WHERE charname='$nomechar' LIMIT 1", "users");
-    if (mysqli_num_rows($userquery) == 1) { $userrow = mysqli_fetch_array($userquery); } else { echo "Nenhum usuï¿½rio."; die();}
+    if (mysqli_num_rows($userquery) == 1) { $userrow = mysqli_fetch_array($userquery); } else { echo "Nenhum usuário."; die();}
     
     // Format various userrow stuffs.
     $userrow["experience"] = number_format($userrow["experience"]);
@@ -98,7 +98,7 @@ $nomechar = $_GET['nomechar'];
 	$embaixo = "<center><font color=\"white\">Link do Personagem:</font><br><input type=\"text\" size=\"20\" value=\"http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/mostrarchar.php?nomechar=".$userrow["charname"]."\"></center>";
     $charsheet = gettemplate("onlinechar");
     $page = $xml . gettemplate("minimal").$embaixo;
-    $array = array("content"=>parsetemplate($charsheet, $userrow), "title"=>"Informaï¿½ï¿½o do Personagem");
+    $array = array("content"=>parsetemplate($charsheet, $userrow), "title"=>"Informação do Personagem");
     echo parsetemplate($page, $array);
     die();
 	
