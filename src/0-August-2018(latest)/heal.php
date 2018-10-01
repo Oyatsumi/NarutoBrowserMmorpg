@@ -13,11 +13,11 @@ function healspells($id) {
     foreach ($userspells as $a => $b) {
         if ($b == $id) { $spell = true; }
     }
-    if ($spell != true) { header('Location: ./index.php?conteudo=Vocï¿½ ainda nï¿½o aprendeu esse Jutsu.');die(); }
-    if ($spellrow["type"] != 1) { header('Location: ./index.php?conteudo=Esse nï¿½o ï¿½ um Jutsu medicinal.');die();}
-    if ($userrow["currentmp"] < $spellrow["mp"]) {header('Location: ./index.php?conteudo=Vocï¿½ nï¿½o tem Chakra suficiente para usar esse Jutsu.');die(); }
-    if ($userrow["currentaction"] == "Fighting") { header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode usar os Jutsus da Lista Rï¿½pida de Jutsus durante uma batalha. Por favor selecione o Jutsu Medicinal que vocï¿½ gostaria de usar pela seleï¿½ï¿½o de Jutsus na janela principal de luta para continuar.');die(); }
-    if ($userrow["currenthp"] == $userrow["maxhp"]) { header('Location: ./index.php?conteudo=Seus Pontos de Vida jï¿½ estï¿½o cheios. Vocï¿½ nï¿½o precisa de um Jutsu Medicinal agora.');die();}
+    if ($spell != true) { header('Location: ./index.php?conteudo=Você ainda não aprendeu esse Jutsu.');die(); }
+    if ($spellrow["type"] != 1) { header('Location: ./index.php?conteudo=Esse não é um Jutsu medicinal.');die();}
+    if ($userrow["currentmp"] < $spellrow["mp"]) {header('Location: ./index.php?conteudo=Você não tem Chakra suficiente para usar esse Jutsu.');die(); }
+    if ($userrow["currentaction"] == "Fighting") { header('Location: ./index.php?do=fight&conteudo=Você não pode usar os Jutsus da Lista Rápida de Jutsus durante uma batalha. Por favor selecione o Jutsu Medicinal que você gostaria de usar pela seleção de Jutsus na janela principal de luta para continuar.');die(); }
+    if ($userrow["currenthp"] == $userrow["maxhp"]) { header('Location: ./index.php?conteudo=Seus Pontos de Vida já estão cheios. Você não precisa de um Jutsu Medicinal agora.');die();}
     
     $newhp = $userrow["currenthp"] + $spellrow["attribute"];
     if ($userrow["maxhp"] < $newhp) { $spellrow["attribute"] = $userrow["maxhp"] - $userrow["currenthp"]; $newhp = $userrow["currenthp"] + $spellrow["attribute"]; }
@@ -25,7 +25,7 @@ function healspells($id) {
     
     $updatequery = doquery("UPDATE {{table}} SET currenthp='$newhp', currentmp='$newmp' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
     
-    header("Location: ./index.php?conteudo=Vocï¿½ usou o ".$spellrow["name"]." e ganhou ".$spellrow["attribute"]." Pontos de Vida.");die();
+    header("Location: ./index.php?conteudo=Você usou o ".$spellrow["name"]." e ganhou ".$spellrow["attribute"]." Pontos de Vida.");die();
     
 }
 

@@ -34,12 +34,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="php" value="54" />
+          <entry key="php" value="55" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="PHP" value="54" />
+          <entry key="PHP" value="55" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -58,15 +58,6 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/towns.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1428">
-              <caret line="84" column="51" selection-start-line="84" selection-start-column="38" selection-end-line="84" selection-end-column="51" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/troca.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="9061">
@@ -84,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forum.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2117">
-              <caret line="152" column="203" selection-start-line="152" selection-start-column="193" selection-end-line="152" selection-end-column="203" />
+            <state relative-caret-position="587">
+              <caret line="152" column="176" lean-forward="true" selection-start-line="152" selection-start-column="176" selection-end-line="152" selection-end-column="176" />
               <folding>
                 <element signature="n#style#0;n#td#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#table#0;n#td#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
@@ -118,6 +109,15 @@
                 <element signature="n#style#0;n#td#1;n#tr#0;n#!!top" expanded="true" />
                 <element signature="e#49#57#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/heal.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="102" selection-start-line="17" selection-start-column="102" selection-end-line="17" selection-end-column="102" />
             </state>
           </provider>
         </entry>
@@ -186,7 +186,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Mensagens Privadas</find>
       <find>currentmp</find>
       <find>mensagem aqui</find>
       <find>, provo</find>
@@ -215,6 +214,7 @@
       <find>nigeru.com</find>
       <find>nigeru</find>
       <find>vers</find>
+      <find>chakra sufi</find>
       <find>$categoria</find>
     </findStrings>
     <replaceStrings>
@@ -257,7 +257,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="240" />
     <option name="y" value="130" />
     <option name="width" value="1440" />
@@ -323,12 +323,12 @@
       <updated>1538257997054</updated>
       <workItem from="1538257998245" duration="294000" />
       <workItem from="1538258303376" duration="18796000" />
-      <workItem from="1538350657431" duration="1840000" />
+      <workItem from="1538350657431" duration="2934000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20930000" />
+    <option name="totallyTimeSpent" value="22024000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -458,6 +458,37 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="727">
           <caret line="907" column="1" selection-start-line="907" selection-end-line="907" selection-end-column="1" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#td#1;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#td#1;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#table#0;n#div#0;n#div#0;n#td#1;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#center#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#td#0;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#center#0;n#td#0;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#center#0;n#td#0;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#center#0;n#td#0;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#center#0;n#td#0;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#td#1;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#table#0;n#div#0;n#td#1;n#tr#0;n#table#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#td#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -588,8 +619,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/forum.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2117">
-          <caret line="152" column="203" selection-start-line="152" selection-start-column="193" selection-end-line="152" selection-end-column="203" />
+        <state relative-caret-position="587">
+          <caret line="152" column="176" lean-forward="true" selection-start-line="152" selection-start-column="176" selection-end-line="152" selection-end-column="176" />
           <folding>
             <element signature="n#style#0;n#td#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#table#0;n#td#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
@@ -619,6 +650,13 @@
             <element signature="n#style#0;n#td#1;n#tr#0;n#!!top" expanded="true" />
             <element signature="e#49#57#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/heal.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="102" selection-start-line="17" selection-start-column="102" selection-end-line="17" selection-end-column="102" />
         </state>
       </provider>
     </entry>
