@@ -3,6 +3,8 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/ativarconta.php" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/fight.php" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/funcaoitens.php" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/funcaoitens.php" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/funcoesinclusas.php" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/graduacao.php" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/heal.php" charset="ISO-8859-1" />
@@ -19,6 +21,7 @@
     <file url="file://$PROJECT_DIR$/towns.php" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/treinamentoequests.php" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/troca.php" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/users - Cópia (2).php" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/users.php" charset="ISO-8859-1" />
   </component>
 </project>

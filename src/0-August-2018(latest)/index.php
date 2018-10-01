@@ -9,7 +9,7 @@ $lat = $_GET['latitude']; $long = $_GET['longitude']; $re = $_GET['re'];
 
 
 if ($indexconteudo2 != ""){
-	$indexconteudo = "<div style=\"position:relative; z-index: 2\"><font color=brown><center>".strip_tags($indexconteudo2)."</font></center></div>";
+	$indexconteudo = "<div style=\"position:relative; z-index: 2\"><font color=brown><center>". strip_tags($indexconteudo2)."</font></center></div>";
 	}
 if (($re != "") && ($long != "") && ($lat != "")){
 $htmlnapag = "<meta HTTP-EQUIV='refresh' CONTENT='1;URL=index.php?do=andar&latitude=".$lat."&longitude=".$long."&conteudo=Seu personagem está indo até a coordenada.'>";}

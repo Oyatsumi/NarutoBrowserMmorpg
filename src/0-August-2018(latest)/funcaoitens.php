@@ -42,15 +42,15 @@ $enviar = $_GET['enviar'];
 $hacont = $_GET['hacont'];
 $depositovar = $_GET['depositovar'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+		if ($userrow == false) { display("Por favor fa?a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa a??o.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
 						
 		$usuariologadoid = $userrow["id"];
 		$usuariologadonome = $userrow["charname"];
@@ -61,7 +61,7 @@ $depositovar = $_GET['depositovar'];
 			$dinheirototal = $usuriologadodinheiro + $ryoudepositado;
 			
 			
-	//conta da porcentagem ï¿½ ser depositada no banco.
+	//conta da porcentagem ? ser depositada no banco.
 	$porcentagemconta = floor(90*$dinheirototal/100);
 		
 		
@@ -79,7 +79,7 @@ $depositovar = $_GET['depositovar'];
 		$porcentagemconta = floor(90*$dinheirototal/100);
 		$dinheirosuposto = $deposito + $ryoudepositado;
 		
-							//dinheiro maior que o possï¿½vel adicionado.						
+							//dinheiro maior que o poss?vel adicionado.						
 							if ($dinheirosuposto > 90*$dinheirototal/100) {
 							$deposito = (floor(90*$dinheirototal/100)) - $ryoudepositado;
 							$hacont = 1;}
@@ -101,8 +101,8 @@ $depositovar = $_GET['depositovar'];
 		if (!is_numeric($retirar)) {header('Location: ./funcaoitens.php?do=banco&f=7');die(); }
 		$retirar = floor($retirar);
 		if ($retirar < 1) {header('Location: ./funcaoitens.php?do=banco&f=8');die(); }
-		if ($retirar > 99999) { header('Location: ./funcaoitens.php?do=banco&br=Vocï¿½ nï¿½o pode retirar mais que 99999 Ryou.');die(); }
-		if ($retirar > $ryoudepositado) { header('Location: ./funcaoitens.php?do=banco&br=Vocï¿½ nï¿½o pode retirar mais que seu dinheiro no banco.');die(); }
+		if ($retirar > 99999) { header('Location: ./funcaoitens.php?do=banco&br=Voce nao pode retirar mais que 99999 Ryou.');die(); }
+		if ($retirar > $ryoudepositado) { header('Location: ./funcaoitens.php?do=banco&br=Voce nao pode retirar mais que seu dinheiro no banco.');die(); }
 				
 		$ryoudepositado -= floor($retirar);
 		$usuriologadodinheiro += floor($retirar);
@@ -113,13 +113,13 @@ $depositovar = $_GET['depositovar'];
 		
 		
 		if ($hacont == ""){
-		header("Location: ./funcaoitens.php?do=banco&br=Vocï¿½ depositou ".$deposito." Ryou e retirou ".$retirar." Ryou do Banco.");
+		header("Location: ./funcaoitens.php?do=banco&br=Voce depositou ".$deposito." Ryou e retirou ".$retirar." Ryou do Banco.");
 
 		
 		  die();
 		  }else{//hacont
 		  
-		  		header("Location: ./funcaoitens.php?do=banco&hacont=$hacont&depositovar=$deposito&br=Vocï¿½ depositou ".$deposito." Ryou e retirou ".$retirar." Ryou do Banco.");
+		  		header("Location: ./funcaoitens.php?do=banco&hacont=$hacont&depositovar=$deposito&br=Voce depositou ".$deposito." Ryou e retirou ".$retirar." Ryou do Banco.");
 				  die();
 		  
 		  }//fim hacont
@@ -137,7 +137,7 @@ $depositovar = $_GET['depositovar'];
 				if ($duraequip[$i] == "X"){$duraequip[$i] = "*";}
 				}
 		
-	//display do banco... contas e sistemï¿½tica(equipamentos equipados).
+	//display do banco... contas e sistem?tica(equipamentos equipados).
 	$tabeladeequipamentos = "<table>
 	<tr bgcolor=\"#452202\"><td colspan=3><font color=white>Itens Equipados</font></td></tr>
 	<tr bgcolor=\"#613003\"><td><font color=white>*</font></td><td><font color=white>Nome</font></td><td><font color=white>*</font></td></tr>";
@@ -186,7 +186,7 @@ $depositovar = $_GET['depositovar'];
 	$i = 0;
 	for ($i = 0; $i <= $quant ; $i++){
 	$itemseparado = explode(",",$equipscomtudo[$i]);
-	//saber que tipo de arma ï¿½
+	//saber que tipo de arma ?
 	$img = "orb_img";
 	if ($itemseparado[2] == 1) {$tipo = "weapon"; $img = "icon_weapon";}
 	elseif ($itemseparado[2] == 2) {$tipo = "armor"; $img = "icon_armor";}
@@ -222,24 +222,24 @@ $depositovar = $_GET['depositovar'];
 	if ($qual != ""){
 	if ($deletar != ""){
 	$tabeladobanco .= "<br><br><center><table width=\"190\"><tr bgcolor=\"#613003\"><td><font color=white>Deletar</font></td></tr>
-	<tr bgcolor=\"#FFF1C7\"><td>Vocï¿½ tem certeza que deseja deletar o item $deletar ?<br><center>
-	<a href=\"funcaoitens.php?do=deletaritem&qual=$qual\"><img border=\"0\" src=\"images/aceitar.gif\" title=\"Deletar Item\" alt=\"X\"></a><a href=\"funcaoitens.php?do=banco\"><img border=\"0\" src=\"images/deletar.gif\" title=\"Nï¿½o Deletar Item\" alt=\"X\"></a></center></td></tr></table></center>";}}
+	<tr bgcolor=\"#FFF1C7\"><td>Voce tem certeza que deseja deletar o item $deletar ?<br><center>
+	<a href=\"funcaoitens.php?do=deletaritem&qual=$qual\"><img border=\"0\" src=\"images/aceitar.gif\" title=\"Deletar Item\" alt=\"X\"></a><a href=\"funcaoitens.php?do=banco\"><img border=\"0\" src=\"images/deletar.gif\" title=\"Nao Deletar Item\" alt=\"X\"></a></center></td></tr></table></center>";}}
 	
 	
 	
 	//item enviado com sucesso
 	if ($f == 1) {$mostraritemenviado = "<center><font color=brown>Seu Item foi Enviado com Sucesso.</font></center><br>";}
-	if ($f == 3) {$mostrarpartecimaryou = "<center><font color=brown>A quantidade de Ryou ï¿½ depositar deve ser um nï¿½mero.</font></center><br>";}
-	if ($f == 4) {$mostrarpartecimaryou = "<center><font color=brown>Vocï¿½ nï¿½o pode depositar menos que 1 Ryou.</font></center><br>";}
-	if ($f == 5) {$mostrarpartecimaryou = "<center><font color=brown>Vocï¿½ nï¿½o pode ter uma quantia maior que $porcentagemconta Ryou no Banco, que representa 90% do seu Ryou total, o que estï¿½ depositado e o que estï¿½ no seu personagem.</font></center><br>";}
-	if ($f == 6) {$mostrarpartecimaryou = "<center><font color=brown>Vocï¿½ nï¿½o pode depositar mais que a sua quantidade de Ryou.</font></center><br>";}
-	if ($f == 7) {$mostrarpartecimaryou = "<center><font color=brown>A quantidade de Ryou ï¿½ retirar deve ser um nï¿½mero.</font></center><br>";}
-	if ($f == 8) {$mostrarpartecimaryou = "<center><font color=brown>Vocï¿½ nï¿½o pode retirar menos que 1 Ryou.</font></center><br>";}
+	if ($f == 3) {$mostrarpartecimaryou = "<center><font color=brown>A quantidade de Ryou a depositar deve ser um numero.</font></center><br>";}
+	if ($f == 4) {$mostrarpartecimaryou = "<center><font color=brown>Voce nao pode depositar menos que 1 Ryou.</font></center><br>";}
+	if ($f == 5) {$mostrarpartecimaryou = "<center><font color=brown>Voce nao pode ter uma quantia maior que $porcentagemconta Ryou no Banco, que representa 90% do seu Ryou total, o que esta depositado e o que esta no seu personagem.</font></center><br>";}
+	if ($f == 6) {$mostrarpartecimaryou = "<center><font color=brown>Voce nao pode depositar mais que a sua quantidade de Ryou.</font></center><br>";}
+	if ($f == 7) {$mostrarpartecimaryou = "<center><font color=brown>A quantidade de Ryou a retirar deve ser um numero.</font></center><br>";}
+	if ($f == 8) {$mostrarpartecimaryou = "<center><font color=brown>Voce nao pode retirar menos que 1 Ryou.</font></center><br>";}
 	if ($f == 10) {$mostraritemenviado = "<center><font color=brown>Item deletado com sucesso.</font></center><br>";}
 
 	
 	
-	if ($hacont == ""){//se o hacont, que ï¿½ o treco de 90% tiver vazio, entï¿½o:
+	if ($hacont == ""){//se o hacont, que ? o treco de 90% tiver vazio, ent?o:
 	
 	if ($f == ""){
 	if ($bi != ""){
@@ -254,7 +254,7 @@ $depositovar = $_GET['depositovar'];
 	}else{//else do if hacont...
 			
 	//deposito maior que 90%
-	$mostrarpartecimaryou .= "<center><font color=brown>Vocï¿½ depositou um valor maior que 90% de seu Ryou Total<i>(no Banco e Equipado)</i>, portanto foi depositado apenas <font color=red>$depositovar</font> Ryou, que ï¿½ a quantia mï¿½xima que vocï¿½ pode depositar em seu Banco no momento.</font></center><br>";
+	$mostrarpartecimaryou .= "<center><font color=brown>Voce depositou um valor maior que 90% de seu Ryou Total<i>(no Banco e Equipado)</i>, portanto foi depositado apenas <font color=red>$depositovar</font> Ryou, que e a quantia maxima que voce pode depositar em seu Banco no momento.</font></center><br>";
 	
 	}//fim do if hacont...
 
@@ -311,27 +311,27 @@ $depositovar = $_GET['depositovar'];
 
 function depositar() {
  /*$itemsquery = doquery("SELECT * FROM {{table}} WHERE id='$id' LIMIT 1", "items");
-    $itemsrow = mysqli_fetch_array($itemsquery);
+    $itemsrow = mysql_fetch_array($itemsquery);
 	
 	$dropquery = doquery("SELECT * FROM {{table}} WHERE mlevel <= '".$monsterrow["level"]."' ORDER BY RAND() LIMIT 1", "drops");
-                $droprow = mysqli_fetch_array($dropquery);
+                $droprow = mysql_fetch_array($dropquery);
 */
 
 global $topvar;
 $topvar = true;
 $qual = $_GET['qual'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
-			if ($qual > 6) {display("Tentativa de trapaï¿½a ou erro detectado.","Erro",false,false,false);die(); }
-			if ($qual < 1) {display("Tentativa de trapaï¿½a ou erro detectado.","Erro",false,false,false);die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
+			if ($qual > 6) {display("Tentativa de trapaça ou erro detectado.","Erro",false,false,false);die(); }
+			if ($qual < 1) {display("Tentativa de trapaça ou erro detectado.","Erro",false,false,false);die(); }
 			
 			if ($userrow["bancogeral"] != "None") {//inicio
 			$novavariavelteste = explode(";",$userrow["bancogeral"]);
@@ -339,7 +339,7 @@ $qual = $_GET['qual'];
 					//quantidade banco VIP
 					if ($userrow["acesso"] > 0){$quantositens = 60;}else{$quantositens = 30;}
 			
-			if (count($novavariavelteste) >= $quantositens){header("Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ nï¿½o pode ter mais que ".$quantositens." itens no Banco.");die(); }
+			if (count($novavariavelteste) >= $quantositens){header("Location: ./funcaoitens.php?do=banco&bi=Voc~e nao pode ter mais que ".$quantositens." itens no Banco.");die(); }
 			}//fim
 			
 		$usuariologadoid = $userrow["id"];
@@ -363,7 +363,7 @@ $qual = $_GET['qual'];
 		
 		if ($qual <= 3) {//para weapon armor e shield
 	$itemsquery = doquery("SELECT * FROM {{table}} WHERE id='".$userrow[$id]."' LIMIT 1", "items");
-    $itemsrow = mysqli_fetch_array($itemsquery);
+    $itemsrow = mysql_fetch_array($itemsquery);
 	
 	if ($itemsrow["special"] != "X"){
 	$atributo = explode(",",$itemsrow["special"]);
@@ -372,7 +372,7 @@ $qual = $_GET['qual'];
     elseif ($atributo[0] == "dexterity") { $userrow["defensepower"] -= $atributo[1]; }
 	}
 	
-	//verificar se ï¿½ arma escudo ou armadura:
+	//verificar se ? arma escudo ou armadura:
 	if ($itemsrow["type"] == 1) {//ataque
 	$userrow["attackpower"] -= $itemsrow["attribute"];
 	//verificar bonus +1, +2
@@ -401,7 +401,7 @@ $qual = $_GET['qual'];
 	
 	if ($qual > 3) {//para slots
 	$dropquery = doquery("SELECT * FROM {{table}} WHERE id='".$userrow[$id]."' LIMIT 1", "drops");
-                $droprow = mysqli_fetch_array($dropquery);
+                $droprow = mysql_fetch_array($dropquery);
 				
 	//atributos
 	//primeiro:
@@ -500,31 +500,31 @@ $qual = $_GET['qual'];
 
 function retirar() {
  /*$itemsquery = doquery("SELECT * FROM {{table}} WHERE id='$id' LIMIT 1", "items");
-    $itemsrow = mysqli_fetch_array($itemsquery);
+    $itemsrow = mysql_fetch_array($itemsquery);
 	
 	$dropquery = doquery("SELECT * FROM {{table}} WHERE mlevel <= '".$monsterrow["level"]."' ORDER BY RAND() LIMIT 1", "drops");
-                $droprow = mysqli_fetch_array($dropquery);
+                $droprow = mysql_fetch_array($dropquery);
 */
 
 global $topvar;
 $topvar = true;
 $qual = $_GET['qual'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
 			
 			$itensnobanco = explode(";",$userrow["bancogeral"]);
 			$quantidade = count($itensnobanco) - 1;
 			
 			//fim
-			if ($qual >= $quantidade) {display("Tentativa de trapaï¿½a ou erro detectado.","Erro",false,false,false);die(); }
+			if ($qual >= $quantidade) {display("Tentativa de trapaça ou erro detectado.","Erro",false,false,false);die(); }
 						
 		
 			
@@ -536,18 +536,16 @@ $qual = $_GET['qual'];
 
 	
 	//se nao tem item
-	if ($itensnobanco[$qual] == ""){header('Location: '
-    .$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].
-    '?do=banco');die(); }
+	if ($itensnobanco[$qual] == ""){header('Location: http://nigeru.com/narutorpg/funcaoitens.php?do=banco');die(); }
 		
-	//separaï¿½ï¿½o de subitens:
+	//separa??o de subitens:
 	$itemseparado = explode(",",$itensnobanco[$qual]);
 	
-	//aqui se os itens sï¿½o para somente a backpack ou podem ser equipados tambï¿½m.
+	//aqui se os itens s?o para somente a backpack ou podem ser equipados tamb?m.
 	if (is_numeric($itemseparado[1])) {
 	
 		
-	//fim se algo jï¿½ estiver equipado no jogador
+	//fim se algo j? estiver equipado no jogador
 	//pra saber qual foi o item.
 	if ($itemseparado[2] == 1) {$nomedoslot = "weapon"; $frasemostrar = "Arma";}
 	if ($itemseparado[2] == 2) {$nomedoslot = "armor"; $frasemostrar = "Colete";}
@@ -565,7 +563,7 @@ $qual = $_GET['qual'];
 	if ($userrow["bp3"] != "None") {$var += 1;}else{$bpcerto = "bp3";}
 	if ($userrow["bp2"] != "None") {$var += 1;}else{$bpcerto = "bp2";}
 	if ($userrow["bp1"] != "None") {$var += 1;}else{$bpcerto = "bp1";}
-	if ($var == 4){ header("Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ jï¿½ possui um(a) ".$frasemostrar." equipado(a) e nï¿½o possui espaï¿½os livres na sua Mochila. Libere algum espaï¿½o.");die(); }
+	if ($var == 4){ header("Location: ./funcaoitens.php?do=banco&bi=Voce ja possui um(a) ".$frasemostrar." equipado(a) e nao possui espacos livres na sua Mochila. Libere algum espaco.");die(); }
 	
 				$userrow[$bpcerto] = $itensnobanco[$qual];
 	
@@ -574,7 +572,7 @@ $qual = $_GET['qual'];
 				$userrow["bancogeral"] = "";
 				$qcerto = $quantidade - 1; //numero de vezes
 				for($i = 0; $i <= $qcerto; $i++){
-				if ($i != $qual){//pra nao contar o item que estï¿½ querendo retirar do banco.
+				if ($i != $qual){//pra nao contar o item que est? querendo retirar do banco.
 				$userrow["bancogeral"] .= $itensnobanco[$i].";";
 				}
 				}
@@ -601,7 +599,7 @@ $qual = $_GET['qual'];
 	if ($userrow["bp3"] != "None") {$var += 1;}else{$bpcerto = "bp3";}
 	if ($userrow["bp2"] != "None") {$var += 1;}else{$bpcerto = "bp2";}
 	if ($userrow["bp1"] != "None") {$var += 1;}else{$bpcerto = "bp1";}
-	if ($var == 4){ header('Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ nï¿½o possui Slots Livres para Equipar e tambï¿½m nï¿½o possui espaï¿½o livre em sua Mochila. Libere algum espaï¿½o.');die(); }
+	if ($var == 4){ header('Location: ./funcaoitens.php?do=banco&bi=Voce nao possui Slots Livres para Equipar e tambem nao possui espaco livre em sua Mochila. Libere algum espaco.');die(); }
 	
 				$userrow[$bpcerto] = $itensnobanco[$qual];
 	
@@ -610,7 +608,7 @@ $qual = $_GET['qual'];
 				$userrow["bancogeral"] = "";
 				$qcerto = $quantidade - 1; //numero de vezes
 				for($i = 0; $i <= $qcerto; $i++){
-				if ($i != $qual){//pra nao contar o item que estï¿½ querendo retirar do banco.
+				if ($i != $qual){//pra nao contar o item que est? querendo retirar do banco.
 				$userrow["bancogeral"] .= $itensnobanco[$i].";";
 				}
 				}
@@ -625,14 +623,14 @@ $qual = $_GET['qual'];
 			header('Location: ./funcaoitens.php?do=banco'); die();
 		
 		
-		}else{ if($userrow["slot1id"] == 0){$slotcerto = "slot1"; $durabnumcerto = 1;}elseif($userrow["slot2id"] == 0){$slotcerto = "slot2"; $durabnumcerto = 2;}elseif($userrow["slot3id"] == 0){$slotcerto = "slot3"; $durabnumcerto = 3;}}//fechou else2//dizer qual slot estï¿½ livre.
+		}else{ if($userrow["slot1id"] == 0){$slotcerto = "slot1"; $durabnumcerto = 1;}elseif($userrow["slot2id"] == 0){$slotcerto = "slot2"; $durabnumcerto = 2;}elseif($userrow["slot3id"] == 0){$slotcerto = "slot3"; $durabnumcerto = 3;}}//fechou else2//dizer qual slot est? livre.
 	}//fim else1
 	//fechou o fim se ja estiver equipado.	
 		
 		
 	if ($itemseparado[2] <= 3) {//para weapon armor e shield e arma de atk
 	$itemsquery = doquery("SELECT * FROM {{table}} WHERE id='".$itemseparado[1]."' LIMIT 1", "items");
-    $itemsrow = mysqli_fetch_array($itemsquery);
+    $itemsrow = mysql_fetch_array($itemsquery);
 	
 	if ($itemsrow["special"] != "X"){
 	$atributo = explode(",",$itemsrow["special"]);
@@ -641,7 +639,7 @@ $qual = $_GET['qual'];
     elseif ($atributo[0] == "dexterity") { $userrow["defensepower"] += $atributo[1]; }
 	}
 	
-	//verificar se ï¿½ arma escudo ou armadura:
+	//verificar se ? arma escudo ou armadura:
 	if ($itemsrow["type"] == 1) {//ataque
 	$userrow["attackpower"] += $itemsrow["attribute"];
 	//verificar bonus +1, +2
@@ -670,7 +668,7 @@ $qual = $_GET['qual'];
 	
 	if ($itemseparado[2] > 3) {//para slots
 	$dropquery = doquery("SELECT * FROM {{table}} WHERE id='".$itemseparado[1]."' LIMIT 1", "drops");
-                $droprow = mysqli_fetch_array($dropquery);
+                $droprow = mysql_fetch_array($dropquery);
 				
 	//atributos
 	//primeiro:
@@ -712,7 +710,7 @@ $qual = $_GET['qual'];
 	$userrow["bancogeral"] = "";
 	$qcerto = $quantidade - 1; //numero de vezes
 	for($i = 0; $i <= $qcerto; $i++){
-	if ($i != $qual){//pra nao contar o item que estï¿½ querendo retirar do banco.
+	if ($i != $qual){//pra nao contar o item que est? querendo retirar do banco.
 	$userrow["bancogeral"] .= $itensnobanco[$i].";";
 	}
 	}
@@ -728,12 +726,12 @@ $qual = $_GET['qual'];
 	$userrow["durabilidade"] = "-,".$durab[1].",".$durab[2].",".$durab[3].",".$durab[4].",".$durab[5].",".$durab[6];
 	
 	
-	}else{//aqui ï¿½ se os itens forem somente para a backpack.
+	}else{//aqui ? se os itens forem somente para a backpack.
 	if ($userrow["bp4"] != "None") {$var = 1;}else{$bpcerto = "bp4";}
 	if ($userrow["bp3"] != "None") {$var += 1;}else{$bpcerto = "bp3";}
 	if ($userrow["bp2"] != "None") {$var += 1;}else{$bpcerto = "bp2";}
 	if ($userrow["bp1"] != "None") {$var += 1;}else{$bpcerto = "bp1";}
-	if ($var == 4){ header('Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ nï¿½o possui espaï¿½os livres na sua Mochila. Libere algum espaï¿½o.');die(); }
+	if ($var == 4){ header('Location: ./funcaoitens.php?do=banco&bi=Voce nao possui espacos livres na sua Mochila. Libere algum espaco.');die(); }
 	
 	$userrow[$bpcerto] = $itensnobanco[$qual];
 	
@@ -742,7 +740,7 @@ $qual = $_GET['qual'];
 	$userrow["bancogeral"] = "";
 	$qcerto = $quantidade - 1; //numero de vezes
 	for($i = 0; $i <= $qcerto; $i++){
-	if ($i != $qual){//pra nao contar o item que estï¿½ querendo retirar do banco.
+	if ($i != $qual){//pra nao contar o item que est? querendo retirar do banco.
 	$userrow["bancogeral"] .= $itensnobanco[$i].";";
 	}
 	}
@@ -752,7 +750,7 @@ $qual = $_GET['qual'];
 	if ($userrow["bancogeral"] == "") {$userrow["bancogeral"] = "None";}
 	
 	
-	}//fim se os itens forem sï¿½ pra backpack
+	}//fim se os itens forem s? pra backpack
 	
 	//adicionando os stats
 	    $updatequery = doquery("UPDATE {{table}} SET bp4='".$userrow["bp4"]."',bp3='".$userrow["bp3"]."',bp2='".$userrow["bp2"]."',bp1='".$userrow["bp1"]."',durabilidade='".$userrow["durabilidade"]."',goldbonus='".$userrow["goldbonus"]."',expbonus='".$userrow["expbonus"]."',maxhp='".$userrow["maxhp"]."',maxmp='".$userrow["maxmp"]."',maxtp='".$userrow["maxtp"]."',strength='".$userrow["strength"]."',dexterity='".$userrow["dexterity"]."',attackpower='".$userrow["attackpower"]."',defensepower='".$userrow["defensepower"]."', agilidade='".$userrow["agilidade"]."', determinacao='".$userrow["determinacao"]."', precisao='".$userrow["precisao"]."', sorte='".$userrow["sorte"]."', inteligencia='".$userrow["inteligencia"]."', bancogeral='".$userrow["bancogeral"]."', weaponname='".$userrow["weaponname"]."', shieldname='".$userrow["shieldname"]."', armorname='".$userrow["armorname"]."', slot1name='".$userrow["slot1name"]."', slot2name='".$userrow["slot2name"]."', slot3name='".$userrow["slot3name"]."', weaponid='".$userrow["weaponid"]."', shieldid='".$userrow["shieldid"]."', armorid='".$userrow["armorid"]."', slot1id='".$userrow["slot1id"]."', slot2id='".$userrow["slot2id"]."', slot3id='".$userrow["slot3id"]."',droprate='".$userrow["droprate"]."',maxnp='".$userrow["maxnp"]."',maxep='".$userrow["maxep"]."' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
@@ -805,25 +803,25 @@ $qual = $_GET['qual'];
 
 function enviaritem() {
  /*$itemsquery = doquery("SELECT * FROM {{table}} WHERE id='$id' LIMIT 1", "items");
-    $itemsrow = mysqli_fetch_array($itemsquery);
+    $itemsrow = mysql_fetch_array($itemsquery);
 	
 	$dropquery = doquery("SELECT * FROM {{table}} WHERE mlevel <= '".$monsterrow["level"]."' ORDER BY RAND() LIMIT 1", "drops");
-                $droprow = mysqli_fetch_array($dropquery);
+                $droprow = mysql_fetch_array($dropquery);
 */
 
 global $topvar;
 $topvar = true;
 $qual = $_GET['qual'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
 			
 		$quantidade = count($itensnobanco) - 1;
 
@@ -842,12 +840,12 @@ $qual = $_GET['qual'];
 			$quantidade = count($itensnobanco) - 1;
 			
 			//fim
-			if ($qual >= $quantidade) {display("Tentativa de trapaï¿½a ou erro detectado(a).","Erro",false,false,false);die(); }
-			if (strtolower($jogador) == strtolower($userrow["charname"])) {header('Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ nï¿½o pode doar item para vocï¿½ mesmo.');die();}
+			if ($qual >= $quantidade) {display("Tentativa de trapaça ou erro detectado(a).","Erro",false,false,false);die(); }
+			if (strtolower($jogador) == strtolower($userrow["charname"])) {header('Location: ./funcaoitens.php?do=banco&bi=Voce nao pode doar item para voce mesmo.');die();}
 			
 	$userquery2 = doquery("SELECT * FROM {{table}} WHERE charname='$jogador' LIMIT 1", "users");
-	if (mysqli_num_rows($userquery2) != 1) { header('Location: ./funcaoitens.php?do=banco&bi=Nï¿½o existe nenhum Jogador com esse Nome para Doar o Item.');die(); }
-    $userpara = mysqli_fetch_array($userquery2);
+	if (mysql_num_rows($userquery2) != 1) { header('Location: ./funcaoitens.php?do=banco&bi=Nao existe nenhum Jogador com esse Nome para Doar o Item.');die(); }
+    $userpara = mysql_fetch_array($userquery2);
 			
 			
 			//outro jogador
@@ -857,9 +855,9 @@ $qual = $_GET['qual'];
 			//quantidade banco VIP
 					if ($userpara["acesso"] > 0){$quantositens = 60;}else{$quantositens = 30;}
 			
-			if (count($novavariavelteste) >= $quantositens){header("Location: ./funcaoitens.php?do=banco&bi=O Jogador o qual vocï¿½ quer enviar o Item, possui mais de ".$quantositens." Itens no Banco.");die(); }
+			if (count($novavariavelteste) >= $quantositens){header("Location: ./funcaoitens.php?do=banco&bi=O Jogador o qual voce quer enviar o Item, possui mais de ".$quantositens." Itens no Banco.");die(); }
 			}//fim
-			if ($userrow["bancogeral"] == "None"){header('Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ nï¿½o pode doar Itens, vocï¿½ nï¿½o tem nenhum no Banco.');die();}
+			if ($userrow["bancogeral"] == "None"){header('Location: ./funcaoitens.php?do=banco&bi=Voce nao pode doar Itens, voce nao tem nenhum no Banco.');die();}
 		
 		
 //conferindo banco.
@@ -875,7 +873,7 @@ $itemseparado = explode(";",$userrow["bancogeral"]);
 	$userrow["bancogeral"] = "";
 	$qcerto = $quantidade - 1; //numero de vezes
 	for($i = 0; $i <= $qcerto; $i++){
-	if ($i != $qual){//pra nao contar o item que estï¿½ querendo retirar do banco.
+	if ($i != $qual){//pra nao contar o item que est? querendo retirar do banco.
 	$userrow["bancogeral"] .= $itensnobanco[$i].";";
 	}
 	}
@@ -885,7 +883,7 @@ $itemseparado = explode(";",$userrow["bancogeral"]);
 	if ($userrow["bancogeral"] == "") {$userrow["bancogeral"] = "None";}
 	
 	
-	//histï¿½rico adicionando.. historico
+	//hist?rico adicionando.. historico
 	$teste = explode(",",$itemseparado[$qual]);
 	$historico = $userpara["historico"];
 	if ($historico == "None"){
@@ -936,17 +934,17 @@ global $topvar;
 $topvar = true;
 $qual = $_GET['qual'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
-			if ($qual > 4) {display("Tentativa de trapaï¿½a ou erro detectado.","Erro",false,false,false);die(); }
-			if ($qual < 1) {display("Tentativa de trapaï¿½a ou erro detectado.","Erro",false,false,false);die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
+			if ($qual > 4) {display("Tentativa de trapaça ou erro detectado.","Erro",false,false,false);die(); }
+			if ($qual < 1) {display("Tentativa de trapaça ou erro detectado.","Erro",false,false,false);die(); }
 			
 			if ($userrow["bp".$qual] == "None") { header('Location: ./funcaoitens.php?do=banco');die(); }
 			
@@ -956,7 +954,7 @@ $qual = $_GET['qual'];
 			//quantidade banco VIP
 					if ($userrow["acesso"] > 0){$quantositens = 60;}else{$quantositens = 30;}
 			
-			if (count($novavariavelteste) >= $quantositens){header("Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ nï¿½o pode ter mais que ".$quantositens." itens no Banco.");die(); }
+			if (count($novavariavelteste) >= $quantositens){header("Location: ./funcaoitens.php?do=banco&bi=Voce nao pode ter mais que ".$quantositens." itens no Banco.");die(); }
 			}//fim
 			
 			
@@ -1003,15 +1001,15 @@ global $topvar;
 $topvar = true;
 $qual = $_GET['qual'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
 
 
 			$itensnobanco = explode(";",$userrow["bancogeral"]);
@@ -1022,7 +1020,7 @@ $qual = $_GET['qual'];
 	if ($userrow["bp3"] != "None") {$var += 1;}else{$bpcerto = "bp3";}
 	if ($userrow["bp2"] != "None") {$var += 1;}else{$bpcerto = "bp2";}
 	if ($userrow["bp1"] != "None") {$var += 1;}else{$bpcerto = "bp1";}
-	if ($var == 4){ header('Location: ./funcaoitens.php?do=banco&bi=Vocï¿½ nï¿½o possui Slots Livres para Equipar e tambï¿½m nï¿½o possui espaï¿½o livre em sua Mochila. Libere algum espaï¿½o.');die(); }
+	if ($var == 4){ header('Location: ./funcaoitens.php?do=banco&bi=Voce nao possui Slots Livres para Equipar e tambem nao possui espaco livre em sua Mochila. Libere algum espaco.');die(); }
 	
 				$userrow[$bpcerto] = $itensnobanco[$qual];
 	
@@ -1031,7 +1029,7 @@ $qual = $_GET['qual'];
 				$userrow["bancogeral"] = "";
 				$qcerto = $quantidade - 1; //numero de vezes
 				for($i = 0; $i <= $qcerto; $i++){
-				if ($i != $qual){//pra nao contar o item que estï¿½ querendo retirar do banco.
+				if ($i != $qual){//pra nao contar o item que est? querendo retirar do banco.
 				$userrow["bancogeral"] .= $itensnobanco[$i].";";
 				}
 				}
@@ -1084,15 +1082,15 @@ global $topvar;
 $topvar = true;
 $qual = $_GET['qual'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
 
 			$itensnobanco = explode(";",$userrow["bancogeral"]);
 			$quantidade = count($itensnobanco) - 1;
@@ -1103,7 +1101,7 @@ $qual = $_GET['qual'];
 				$userrow["bancogeral"] = "";
 				$qcerto = $quantidade - 1; //numero de vezes
 				for($i = 0; $i <= $qcerto; $i++){
-				if ($i != $qual){//pra nao contar o item que estï¿½ querendo retirar do banco.
+				if ($i != $qual){//pra nao contar o item que est? querendo retirar do banco.
 				$userrow["bancogeral"] .= $itensnobanco[$i].";";
 				}
 				}
@@ -1151,19 +1149,19 @@ global $topvar;
 $topvar = true;
 $qual = $_GET['qual'];
 
-    /* testando se estï¿½ logado */
+    /* testando se est? logado */
 	
 	
 		//include('cookies.php');
 		// $userrow = checkcookies();
 		 global $userrow;
-		if ($userrow == false) { display("Por favor faï¿½a o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa aï¿½ï¿½o.","Erro",false,false,false);die(); }
-		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Vocï¿½ sï¿½ pode acessar essa funï¿½ï¿½o dentro de uma cidade!');die();} }
-			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o no meio de uma batalha!');die(); }
+		if ($userrow == false) { display("Por favor faça o <a href=\"login.php?do=login\">log in</a> no jogo antes de executar essa ação.","Erro",false,false,false);die(); }
+		if ($userrow["currentaction"] != "In Town") {if ($userrow["currentaction"] == "Fighting"){header('Location: ./index.php?do=fight&conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();}else{header('Location: ./index.php?conteudo=Voce so pode acessar essa funcao dentro de uma cidade!');die();} }
+			if ($userrow["currentaction"] == "Fighting") {header('Location: ./index.php?do=fight&conteudo=Voce nao pode acessar essa funcao no meio de uma batalha!');die(); }
 			
 			
 			if ($userrow["level"] < 5) {
-			$indexconteudo = "Vocï¿½ nï¿½o pode acessar essa funï¿½ï¿½o se seu level for menor que 5!";
+			$indexconteudo = "Voce nao pode acessar essa funcao se seu level for menor que 5!";
 			$valorlib = 1; //para nao repetir o lib.php
 			include('index.php');
 			die();
@@ -1177,15 +1175,15 @@ $qual = $_GET['qual'];
 		
 		
 
-        if (mysqli_num_rows($userquery) != 1) {  header('Location: ./funcaoitens.php?do=banco&br=Nï¿½o existe nenhum jogador com esse Nome.');die(); }
-        $userpara = mysqli_fetch_array($userquery);
-		if ($userrow["id"] == $userpara["id"]) { header('Location: ./funcaoitens.php?do=banco&br=Vocï¿½ nï¿½o pode doar Ryou para si mesmo.');die();}
-		if (!is_numeric($quantidaderyou)) { header('Location: ./funcaoitens.php?do=banco&br=A quantidade de Ryou deve ser um nï¿½mero.');die(); }
+        if (mysql_num_rows($userquery) != 1) {  header('Location: ./funcaoitens.php?do=banco&br=Nao existe nenhum jogador com esse Nome.');die(); }
+        $userpara = mysql_fetch_array($userquery);
+		if ($userrow["id"] == $userpara["id"]) { header('Location: ./funcaoitens.php?do=banco&br=Voce nao pode doar Ryou para si mesmo.');die();}
+		if (!is_numeric($quantidaderyou)) { header('Location: ./funcaoitens.php?do=banco&br=A quantidade de Ryou deve ser um numero.');die(); }
 		$quantidaderyou = floor($quantidaderyou);
 		/*if ($userrow["password"] != md5($oldpass)) { die("The old password you provided was incorrect."); }
         /*$realnewpass = md5($newpass1); */
-		if ($quantidaderyou > $userrow["banco_grana"]) { header('Location: ./funcaoitens.php?do=banco&br=Vocï¿½ nï¿½o pode doar mais do que a sua quantidade de Ryou no banco.');die(); }
-		if ($quantidaderyou < 1) { header('Location: ./funcaoitens.php?do=banco&br=Vocï¿½ nï¿½o pode doar menos que 1 Ryou.');die(); }
+		if ($quantidaderyou > $userrow["banco_grana"]) { header('Location: ./funcaoitens.php?do=banco&br=Voce nao pode doar mais do que a sua quantidade de Ryou no banco.');die(); }
+		if ($quantidaderyou < 1) { header('Location: ./funcaoitens.php?do=banco&br=Voce nao pode doar menos que 1 Ryou.');die(); }
 		
 		$dinheirototal = $userpara["gold"] + $quantidaderyou;
 		$dinheirousuariologadodepois = $userrow["banco_grana"] - $quantidaderyou;
