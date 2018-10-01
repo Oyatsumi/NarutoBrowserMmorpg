@@ -42,15 +42,9 @@ Ps4.: You may change the theme of the game to whatever you want and keep using t
 
 By Oyatsumi ( Érick Oliveira Rodrigues ).
 
-For test purposes you may access (this version is broken, please host a new version on your own webhost):
-http://narutorpg.orgfree.com/index.php
 
-And login with:
-->Oyatsumi
-->123456
 
-Attention! If someone is logged on the account already you won't be able to login.
-Also, here is a link with a video demonstration: https://www.youtube.com/watch?v=dKdVN4uJirU
+Here is a link with a video demonstration: https://www.youtube.com/watch?v=dKdVN4uJirU
 
 
 
