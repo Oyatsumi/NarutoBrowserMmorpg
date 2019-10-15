@@ -16,7 +16,7 @@ Attention! Don't try to host this game on your machine because it may induce var
 1) Upload all the files within "src" to the host of your preference.
 	-> You can also create an account here and do it: http://www.freewebhostingarea.com/
 	
-2) Acess the SQL_database of your choice and upload the .sql on the database (sql) folder from your phpMyAdmin on the "import" option, then. After this, the database populated with the tables of the game.
+2) Acess the SQL_database of your choice and upload the .sql on the database (sql) folder from your phpMyAdmin on the "import" option, then. Afterwards, the database will be populated with the tables of the game.
 	-> Change the database name "databaseName" (on the .sql file) according to your preferences and the name of your mySQL table.
 	
 3) Change the config.php file within the "src" folder to your mysql connection parameters, don't change the prefix variable.
