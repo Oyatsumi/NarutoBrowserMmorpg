@@ -40,8 +40,14 @@ Please provide credits.
 
 Ps2.: You may access "admin.php" to alter some stuff, but beware, some images within the project folder are linked to some contents in the dataset. The "monster cards" are directly connected.
 
-Ps3.: To play without an admin account ("authlevel == 1"), remove this piece of code from index.php:
+Ps3.: To play without an admin account ("authlevel == 1"), remove this piece of code from your index.php:
 
+	
+	if ($controlrow["gameopen"] == 0) {
+	if ($userrow["authlevel"] != 1){
+	display("Foi encontrado um bug no jogo. O mesmo estará fechado até o lançamento da próxima versão. Por favor volte mais tarde e 	desculpe o transtorno.","Fechado"); die();
+	}
+	}
 	
 Ps4.: You may change the theme of the game to whatever you want and keep using the engine. You can also use the psds as you wish (included here).
 
