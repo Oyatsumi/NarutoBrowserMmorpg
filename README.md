@@ -26,7 +26,9 @@ Attention! Don't try to host this game on your machine because it may induce var
 	-> The SQL file contains the tables named with this prefix, so please do not change it.
 
 4) Open your domain in your browser and login with (admin account):
+
 	-> Account: Oyatsumi
+	
 	-> Pass.: 123456 
 	
 
