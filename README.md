@@ -21,7 +21,7 @@ Attention! Don't try to host this game on your machine because it may induce var
 	
 	-> Change the database name (on the top of your .sql file, e.g., Database: `newname`) according to your preferences and the name of your mySQL table.
 	
-3) Change the config.php file within the "src" folder to your mysql connection parameters, don't change the prefix "dk_".
+3) Change the config.php file within the "src" folder to your mysql connection parameters, don't change the prefix "dk".
 	
 	-> The SQL file contains the tables named with this prefix, so please do not change it.
 
